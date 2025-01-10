@@ -1,4 +1,4 @@
-package com.404-friends;
+package com.friends;
 
 /**
  * Hello world!
