@@ -131,7 +131,7 @@ public class CalculatorController {
         }
 
         if (validOperation) {
-
+            display.setText(formatAsIntegerOrDouble(result));
             // Display the result as an integer if it has no fractional part, otherwise as a double
             String resultString;
             if (result == (long) result) {
@@ -164,7 +164,13 @@ public class CalculatorController {
         operator = "";
         numberHandler.setNewCalculation(true);
     }
-
+    public String formatAsIntegerOrDouble(double number) {
+        if (number == (long) number) {
+            return String.valueOf((long) number); // Convert to integer
+        } else {
+            return String.valueOf(number); // Keep as double
+        }
+    }
     @FXML
     public void handleHistoryClick() {
         try {
@@ -177,6 +183,12 @@ public class CalculatorController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+    public void handleSquareRootClick() {
+        SqrtHandler sqrtHandler = new SqrtHandler();
+        String result = sqrtHandler.calculateSquareRoot(display.getText());
+        display.setText(result);
     }
 
 }
