@@ -10,11 +10,18 @@ public class CalculatorController {
     private double firstNumber = 0;
     private String operator = "";
     private final NumberHandler numberHandler = new NumberHandler(true); // Use NumberHandler instance
+    private final EditHandler editHandler = new EditHandler();
+
 
     @FXML
     public void handleNumberClick(javafx.event.ActionEvent event) {
         String number = ((javafx.scene.control.Button) event.getSource()).getText();
         numberHandler.handleNumberClick(number, display);
+    }
+
+    @FXML
+    public void handleBackspaceClick() {
+        editHandler.removeLastEntry(display);
     }
 
     @FXML
