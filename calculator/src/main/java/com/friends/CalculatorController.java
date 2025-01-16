@@ -15,6 +15,12 @@ public class CalculatorController {
     private String operator = "";
     private final NumberHandler numberHandler = new NumberHandler(true); // Use NumberHandler instance
 
+    private final EditHandler editHandler = new EditHandler();
+
+
+    private final SqrtHandler SqrtObj = new SqrtHandler(); // Use sqrtHandler instance
+
+
     @FXML
     public void handleNumberClick(javafx.event.ActionEvent event) {
         String number = ((javafx.scene.control.Button) event.getSource()).getText();
@@ -22,9 +28,23 @@ public class CalculatorController {
     }
 
     @FXML
+    public void handleBackspaceClick() {
+        editHandler.removeLastEntry(display);
+    }
+
+    @FXML
     public void handleOperatorClick(javafx.event.ActionEvent event) {
         String newOperator = ((javafx.scene.control.Button) event.getSource()).getText();
+        String displayText = display.getText();
 
+        // If an operator already exists, replace it with the new operator
+        if (!operator.isEmpty() && displayText.contains(" " + operator + " ")) {
+            display.setText(displayText.substring(0, displayText.lastIndexOf(" " + operator + " ")) + " " + newOperator + " ");
+            operator = newOperator;
+            return;
+        }
+
+        // Normal behavior: set the operator for the first time
         if (!operator.isEmpty() && !numberHandler.isNewCalculation()) {
             calculate();
         }
@@ -39,21 +59,35 @@ public class CalculatorController {
 
     @FXML
     public void handleEqualsClick() {
-        // If no operator is set or a new calculation has started, exit
-        if (operator.isEmpty() || numberHandler.isNewCalculation()) {
+        // If no operator is set, just display the last entered number
+        if (operator.isEmpty()) {
+            display.setText(formatAsIntegerOrDouble(firstNumber));
+            return;
+        }
+
+        String displayText = display.getText();
+        boolean hasSecondNumber = displayText.trim().endsWith(operator);
+
+        if (hasSecondNumber) {
+            // If there's no second number, show the first number as an integer if possible
+            display.setText(formatAsIntegerOrDouble(firstNumber));
+            operator = ""; // Reset operator
+            numberHandler.setNewCalculation(true);
             return;
         }
 
         try {
             calculate();
         } catch (NumberFormatException e) {
-            display.setText("Error"); // Display error for invalid input
+            display.setText(formatAsIntegerOrDouble(firstNumber)); // Display the first number instead of error
         } finally {
             operator = ""; // Reset operator
         }
 
+
         // Export history to JSON after each calculation
         exportHistoryToJSON();
+
     }
 
     private void calculate() {
@@ -64,7 +98,7 @@ public class CalculatorController {
             // Extract the second number after the operator
             secondNumber = Double.parseDouble(displayText.substring(displayText.lastIndexOf(" ") + 1));
         } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-            display.setText("Error");
+            display.setText(formatAsIntegerOrDouble(firstNumber));
             numberHandler.setNewCalculation(true);
             return;
         }
@@ -97,6 +131,7 @@ public class CalculatorController {
         }
 
         if (validOperation) {
+
             // Display the result as an integer if it has no fractional part, otherwise as a double
             String resultString;
             if (result == (long) result) {
@@ -106,6 +141,7 @@ public class CalculatorController {
             }
 
             display.setText(resultString);
+
             firstNumber = result;
             numberHandler.setNewCalculation(true);
 
@@ -142,4 +178,5 @@ public class CalculatorController {
             e.printStackTrace();
         }
     }
+
 }
