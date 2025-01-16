@@ -1,7 +1,11 @@
 package com.friends;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class CalculatorController {
     @FXML
@@ -10,12 +14,12 @@ public class CalculatorController {
     private double firstNumber = 0;
     private String operator = "";
     private final NumberHandler numberHandler = new NumberHandler(true); // Use NumberHandler instance
-<<<<<<< HEAD
+
     private final EditHandler editHandler = new EditHandler();
 
-=======
+
     private final SqrtHandler SqrtObj = new SqrtHandler(); // Use sqrtHandler instance
->>>>>>> 01a1938762660d98c56bab96e49efdb68df9fe97
+
 
     @FXML
     public void handleNumberClick(javafx.event.ActionEvent event) {
@@ -72,7 +76,6 @@ public class CalculatorController {
             return;
         }
 
-        // Safely attempt to calculate and display the result
         try {
             calculate();
         } catch (NumberFormatException e) {
@@ -80,6 +83,11 @@ public class CalculatorController {
         } finally {
             operator = ""; // Reset operator
         }
+
+
+        // Export history to JSON after each calculation
+        exportHistoryToJSON();
+
     }
 
     private void calculate() {
@@ -123,10 +131,30 @@ public class CalculatorController {
         }
 
         if (validOperation) {
-            display.setText(formatAsIntegerOrDouble(result));
+
+            // Display the result as an integer if it has no fractional part, otherwise as a double
+            String resultString;
+            if (result == (long) result) {
+                resultString = String.valueOf((long) result); // Display as integer
+            } else {
+                resultString = String.valueOf(result); // Display as double
+            }
+
+            display.setText(resultString);
+
             firstNumber = result;
             numberHandler.setNewCalculation(true);
+
+            // Save the calculation to the database
+            String expression = displayText;
+            DBConnector.insertHistory(expression, resultString);
         }
+    }
+
+    private void exportHistoryToJSON() {
+        String filePath = "history.json"; // Adjust path as needed
+        DBConnector.exportHistoryToJSON(filePath);
+        System.out.println("History exported to JSON: " + filePath);
     }
 
     @FXML
@@ -137,20 +165,18 @@ public class CalculatorController {
         numberHandler.setNewCalculation(true);
     }
 
-    /**
-     * Formats a number as an integer if it has no fractional part, otherwise as a double.
-     */
-    public String formatAsIntegerOrDouble(double number) {
-        if (number == (long) number) {
-            return String.valueOf((long) number); // Convert to integer
-        } else {
-            return String.valueOf(number); // Keep as double
+    @FXML
+    public void handleHistoryClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/history.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Calculation History");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void handleSquareRootClick() {
-        SqrtHandler sqrtHandler = new SqrtHandler();
-        String result = sqrtHandler.calculateSquareRoot(display.getText());
-        display.setText(result);
-    }
 }
