@@ -10,6 +10,7 @@ public class CalculatorController {
     private double firstNumber = 0;
     private String operator = "";
     private final NumberHandler numberHandler = new NumberHandler(true); // Use NumberHandler instance
+    private final SqrtHandler SqrtObj = new SqrtHandler(); // Use sqrtHandler instance
 
     @FXML
     public void handleNumberClick(javafx.event.ActionEvent event) {
@@ -129,11 +130,17 @@ public class CalculatorController {
     /**
      * Formats a number as an integer if it has no fractional part, otherwise as a double.
      */
-    private String formatAsIntegerOrDouble(double number) {
+    public String formatAsIntegerOrDouble(double number) {
         if (number == (long) number) {
             return String.valueOf((long) number); // Convert to integer
         } else {
             return String.valueOf(number); // Keep as double
         }
+    }
+
+    public void handleSquareRootClick() {
+        SqrtHandler sqrtHandler = new SqrtHandler();
+        String result = sqrtHandler.calculateSquareRoot(display.getText());
+        display.setText(result);
     }
 }
