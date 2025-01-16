@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-public class ClearController {
+public class ClearHandler {
 
     @FXML
     private TextField display;
