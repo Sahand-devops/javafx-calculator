@@ -13,6 +13,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        primaryStage.setResizable(false);
         // Load the .fxml file
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/calculator.fxml"));
 
