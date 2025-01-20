@@ -1,356 +1,356 @@
 [
-    {
-        "result": "0.5384615384615384",
-        "expression": "78",
-        "id": 7,
-        "timestamp": "2025-01-16 16:29:03.0"
-    },
-    {
-        "result": "39",
-        "expression": "78 / 2",
-        "id": 8,
-        "timestamp": "2025-01-16 16:29:24.0"
-    },
-    {
-        "result": "16",
-        "expression": "8 + 8",
-        "id": 9,
-        "timestamp": "2025-01-16 16:38:21.0"
-    },
-    {
-        "result": "24",
-        "expression": "16 + 8",
-        "id": 10,
-        "timestamp": "2025-01-16 16:39:11.0"
-    },
-    {
-        "result": "29",
-        "expression": "24 + 5",
-        "id": 11,
-        "timestamp": "2025-01-16 16:40:41.0"
-    },
-    {
-        "result": "16",
-        "expression": "8 + 8",
-        "id": 12,
-        "timestamp": "2025-01-16 16:44:05.0"
-    },
-    {
-        "result": "24",
-        "expression": "16 + 8",
-        "id": 13,
-        "timestamp": "2025-01-16 16:44:09.0"
-    },
-    {
-        "result": "32",
-        "expression": "24 + 8",
-        "id": 14,
-        "timestamp": "2025-01-16 16:44:14.0"
-    },
-    {
-        "result": "37",
-        "expression": "32 + 5",
-        "id": 15,
-        "timestamp": "2025-01-16 16:44:19.0"
-    },
-    {
-        "result": "40",
-        "expression": "37 + 3",
-        "id": 16,
-        "timestamp": "2025-01-16 16:44:30.0"
-    },
-    {
-        "result": "42",
-        "expression": "40 + 2",
-        "id": 17,
-        "timestamp": "2025-01-16 16:45:49.0"
-    },
-    {
-        "result": "8008141",
-        "expression": "8008135 + 6",
-        "id": 19,
-        "timestamp": "2025-01-16 21:58:26.0"
-    },
-    {
-        "result": "0.09836065573770492",
-        "expression": "122",
-        "id": 20,
-        "timestamp": "2025-01-20 10:13:22.0"
-    },
-    {
-        "result": "0.1",
-        "expression": "10",
-        "id": 21,
-        "timestamp": "2025-01-20 10:13:31.0"
-    },
-    {
-        "result": "0.1",
-        "expression": "10",
-        "id": 22,
-        "timestamp": "2025-01-20 10:15:54.0"
-    },
-    {
-        "result": "0.05",
-        "expression": "20",
-        "id": 23,
-        "timestamp": "2025-01-20 10:16:19.0"
-    },
-    {
-        "result": "83",
-        "expression": "75 + 8",
-        "id": 24,
-        "timestamp": "2025-01-20 10:17:45.0"
-    },
-    {
-        "result": "415",
-        "expression": "83 * 5",
-        "id": 25,
-        "timestamp": "2025-01-20 10:17:47.0"
-    },
-    {
-        "result": "411",
-        "expression": "415 - 4",
-        "id": 26,
-        "timestamp": "2025-01-20 10:17:48.0"
-    },
-    {
-        "result": "0.1",
-        "expression": "10",
-        "id": 27,
-        "timestamp": "2025-01-20 10:45:25.0"
-    },
-    {
-        "result": "0.2",
-        "expression": "2 / 10",
-        "id": 28,
-        "timestamp": "2025-01-20 10:55:32.0"
-    },
-    {
-        "result": "1",
-        "expression": "1",
-        "id": 29,
-        "timestamp": "2025-01-20 10:56:35.0"
-    },
-    {
-        "result": "10",
-        "expression": "1",
-        "id": 30,
-        "timestamp": "2025-01-20 10:56:46.0"
-    },
-    {
-        "result": "20",
-        "expression": "10 * 2",
-        "id": 31,
-        "timestamp": "2025-01-20 10:57:35.0"
-    },
-    {
-        "result": "4",
-        "expression": "1",
-        "id": 32,
-        "timestamp": "2025-01-20 10:57:56.0"
-    },
-    {
-        "result": "10",
-        "expression": "5",
-        "id": 33,
-        "timestamp": "2025-01-20 10:58:29.0"
-    },
-    {
-        "result": "1",
-        "expression": "50",
-        "id": 34,
-        "timestamp": "2025-01-20 10:58:51.0"
-    },
-    {
-        "result": "5",
-        "expression": "1 * 5",
-        "id": 35,
-        "timestamp": "2025-01-20 11:03:35.0"
-    },
-    {
-        "result": "0.125",
-        "expression": "1 / 8",
-        "id": 36,
-        "timestamp": "2025-01-20 11:04:31.0"
-    },
-    {
-        "result": "0.25",
-        "expression": "0.125 * 2",
-        "id": 37,
-        "timestamp": "2025-01-20 11:04:35.0"
-    },
-    {
-        "result": "0.5",
-        "expression": "0.25 * 2",
-        "id": 38,
-        "timestamp": "2025-01-20 11:04:38.0"
-    },
-    {
-        "result": "2",
-        "expression": "0.5 * 4",
-        "id": 39,
-        "timestamp": "2025-01-20 11:04:42.0"
-    },
-    {
-        "result": "-6",
-        "expression": "2 - 8",
-        "id": 40,
-        "timestamp": "2025-01-20 11:04:47.0"
-    },
-    {
-        "result": "16",
-        "expression": "2 * 8",
-        "id": 41,
-        "timestamp": "2025-01-20 11:04:57.0"
-    },
-    {
-        "result": "96",
-        "expression": "12 * 8",
-        "id": 42,
-        "timestamp": "2025-01-20 11:05:08.0"
-    },
-    {
-        "result": "5",
-        "expression": "1 * 5",
-        "id": 43,
-        "timestamp": "2025-01-20 11:05:16.0"
-    },
-    {
-        "result": "6",
-        "expression": "12 / 2",
-        "id": 44,
-        "timestamp": "2025-01-20 11:16:34.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(12)",
-        "id": 45,
-        "timestamp": "2025-01-20 12:04:12.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(3.4641016151377544)",
-        "id": 46,
-        "timestamp": "2025-01-20 12:04:12.0"
-    },
-    {
-        "result": "1.4142135623730951",
-        "expression": "sqrt(2)",
-        "id": 47,
-        "timestamp": "2025-01-20 12:04:26.0"
-    },
-    {
-        "result": "1.4142135623730951",
-        "expression": "sqrt(1.4142135623730951)",
-        "id": 48,
-        "timestamp": "2025-01-20 12:04:26.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(12)",
-        "id": 49,
-        "timestamp": "2025-01-20 12:04:28.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(3.4641016151377544)",
-        "id": 50,
-        "timestamp": "2025-01-20 12:04:28.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(12)",
-        "id": 51,
-        "timestamp": "2025-01-20 12:11:01.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(3.4641016151377544)",
-        "id": 52,
-        "timestamp": "2025-01-20 12:11:01.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(12)",
-        "id": 53,
-        "timestamp": "2025-01-20 12:11:07.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(3.4641016151377544)",
-        "id": 54,
-        "timestamp": "2025-01-20 12:11:07.0"
-    },
-    {
-        "result": "3",
-        "expression": "1 + 2",
-        "id": 55,
-        "timestamp": "2025-01-20 12:47:28.0"
-    },
-    {
-        "result": "-4",
-        "expression": "3 - 7",
-        "id": 56,
-        "timestamp": "2025-01-20 12:47:31.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(12)",
-        "id": 57,
-        "timestamp": "2025-01-20 14:13:30.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(3.4641016151377544)",
-        "id": 58,
-        "timestamp": "2025-01-20 14:13:30.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(12)",
-        "id": 59,
-        "timestamp": "2025-01-20 14:18:29.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(3.4641016151377544)",
-        "id": 60,
-        "timestamp": "2025-01-20 14:18:29.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(12)",
-        "id": 61,
-        "timestamp": "2025-01-20 14:23:41.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(3.4641016151377544)",
-        "id": 62,
-        "timestamp": "2025-01-20 14:23:41.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(12)",
-        "id": 63,
-        "timestamp": "2025-01-20 14:23:57.0"
-    },
-    {
-        "result": "3.4641016151377544",
-        "expression": "sqrt(3.4641016151377544)",
-        "id": 64,
-        "timestamp": "2025-01-20 14:23:57.0"
-    },
-    {
-        "result": "6.48074069840786",
-        "expression": "sqrt(42)",
-        "id": 65,
-        "timestamp": "2025-01-20 14:25:49.0"
-    },
-    {
-        "result": "12",
-        "expression": "12",
-        "id": 66,
-        "timestamp": "2025-01-20 14:32:10.0"
-    }
+  {
+    "result": "0.5384615384615384",
+    "expression": "78",
+    "id": 7,
+    "timestamp": "2025-01-16 16:29:03.0"
+  },
+  {
+    "result": "39",
+    "expression": "78 / 2",
+    "id": 8,
+    "timestamp": "2025-01-16 16:29:24.0"
+  },
+  {
+    "result": "16",
+    "expression": "8 + 8",
+    "id": 9,
+    "timestamp": "2025-01-16 16:38:21.0"
+  },
+  {
+    "result": "24",
+    "expression": "16 + 8",
+    "id": 10,
+    "timestamp": "2025-01-16 16:39:11.0"
+  },
+  {
+    "result": "29",
+    "expression": "24 + 5",
+    "id": 11,
+    "timestamp": "2025-01-16 16:40:41.0"
+  },
+  {
+    "result": "16",
+    "expression": "8 + 8",
+    "id": 12,
+    "timestamp": "2025-01-16 16:44:05.0"
+  },
+  {
+    "result": "24",
+    "expression": "16 + 8",
+    "id": 13,
+    "timestamp": "2025-01-16 16:44:09.0"
+  },
+  {
+    "result": "32",
+    "expression": "24 + 8",
+    "id": 14,
+    "timestamp": "2025-01-16 16:44:14.0"
+  },
+  {
+    "result": "37",
+    "expression": "32 + 5",
+    "id": 15,
+    "timestamp": "2025-01-16 16:44:19.0"
+  },
+  {
+    "result": "40",
+    "expression": "37 + 3",
+    "id": 16,
+    "timestamp": "2025-01-16 16:44:30.0"
+  },
+  {
+    "result": "42",
+    "expression": "40 + 2",
+    "id": 17,
+    "timestamp": "2025-01-16 16:45:49.0"
+  },
+  {
+    "result": "8008141",
+    "expression": "8008135 + 6",
+    "id": 19,
+    "timestamp": "2025-01-16 21:58:26.0"
+  },
+  {
+    "result": "0.09836065573770492",
+    "expression": "122",
+    "id": 20,
+    "timestamp": "2025-01-20 10:13:22.0"
+  },
+  {
+    "result": "0.1",
+    "expression": "10",
+    "id": 21,
+    "timestamp": "2025-01-20 10:13:31.0"
+  },
+  {
+    "result": "0.1",
+    "expression": "10",
+    "id": 22,
+    "timestamp": "2025-01-20 10:15:54.0"
+  },
+  {
+    "result": "0.05",
+    "expression": "20",
+    "id": 23,
+    "timestamp": "2025-01-20 10:16:19.0"
+  },
+  {
+    "result": "83",
+    "expression": "75 + 8",
+    "id": 24,
+    "timestamp": "2025-01-20 10:17:45.0"
+  },
+  {
+    "result": "415",
+    "expression": "83 * 5",
+    "id": 25,
+    "timestamp": "2025-01-20 10:17:47.0"
+  },
+  {
+    "result": "411",
+    "expression": "415 - 4",
+    "id": 26,
+    "timestamp": "2025-01-20 10:17:48.0"
+  },
+  {
+    "result": "0.1",
+    "expression": "10",
+    "id": 27,
+    "timestamp": "2025-01-20 10:45:25.0"
+  },
+  {
+    "result": "0.2",
+    "expression": "2 / 10",
+    "id": 28,
+    "timestamp": "2025-01-20 10:55:32.0"
+  },
+  {
+    "result": "1",
+    "expression": "1",
+    "id": 29,
+    "timestamp": "2025-01-20 10:56:35.0"
+  },
+  {
+    "result": "10",
+    "expression": "1",
+    "id": 30,
+    "timestamp": "2025-01-20 10:56:46.0"
+  },
+  {
+    "result": "20",
+    "expression": "10 * 2",
+    "id": 31,
+    "timestamp": "2025-01-20 10:57:35.0"
+  },
+  {
+    "result": "4",
+    "expression": "1",
+    "id": 32,
+    "timestamp": "2025-01-20 10:57:56.0"
+  },
+  {
+    "result": "10",
+    "expression": "5",
+    "id": 33,
+    "timestamp": "2025-01-20 10:58:29.0"
+  },
+  {
+    "result": "1",
+    "expression": "50",
+    "id": 34,
+    "timestamp": "2025-01-20 10:58:51.0"
+  },
+  {
+    "result": "5",
+    "expression": "1 * 5",
+    "id": 35,
+    "timestamp": "2025-01-20 11:03:35.0"
+  },
+  {
+    "result": "0.125",
+    "expression": "1 / 8",
+    "id": 36,
+    "timestamp": "2025-01-20 11:04:31.0"
+  },
+  {
+    "result": "0.25",
+    "expression": "0.125 * 2",
+    "id": 37,
+    "timestamp": "2025-01-20 11:04:35.0"
+  },
+  {
+    "result": "0.5",
+    "expression": "0.25 * 2",
+    "id": 38,
+    "timestamp": "2025-01-20 11:04:38.0"
+  },
+  {
+    "result": "2",
+    "expression": "0.5 * 4",
+    "id": 39,
+    "timestamp": "2025-01-20 11:04:42.0"
+  },
+  {
+    "result": "-6",
+    "expression": "2 - 8",
+    "id": 40,
+    "timestamp": "2025-01-20 11:04:47.0"
+  },
+  {
+    "result": "16",
+    "expression": "2 * 8",
+    "id": 41,
+    "timestamp": "2025-01-20 11:04:57.0"
+  },
+  {
+    "result": "96",
+    "expression": "12 * 8",
+    "id": 42,
+    "timestamp": "2025-01-20 11:05:08.0"
+  },
+  {
+    "result": "5",
+    "expression": "1 * 5",
+    "id": 43,
+    "timestamp": "2025-01-20 11:05:16.0"
+  },
+  {
+    "result": "6",
+    "expression": "12 / 2",
+    "id": 44,
+    "timestamp": "2025-01-20 11:16:34.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(12)",
+    "id": 45,
+    "timestamp": "2025-01-20 12:04:12.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(3.4641016151377544)",
+    "id": 46,
+    "timestamp": "2025-01-20 12:04:12.0"
+  },
+  {
+    "result": "1.4142135623730951",
+    "expression": "sqrt(2)",
+    "id": 47,
+    "timestamp": "2025-01-20 12:04:26.0"
+  },
+  {
+    "result": "1.4142135623730951",
+    "expression": "sqrt(1.4142135623730951)",
+    "id": 48,
+    "timestamp": "2025-01-20 12:04:26.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(12)",
+    "id": 49,
+    "timestamp": "2025-01-20 12:04:28.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(3.4641016151377544)",
+    "id": 50,
+    "timestamp": "2025-01-20 12:04:28.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(12)",
+    "id": 51,
+    "timestamp": "2025-01-20 12:11:01.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(3.4641016151377544)",
+    "id": 52,
+    "timestamp": "2025-01-20 12:11:01.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(12)",
+    "id": 53,
+    "timestamp": "2025-01-20 12:11:07.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(3.4641016151377544)",
+    "id": 54,
+    "timestamp": "2025-01-20 12:11:07.0"
+  },
+  {
+    "result": "3",
+    "expression": "1 + 2",
+    "id": 55,
+    "timestamp": "2025-01-20 12:47:28.0"
+  },
+  {
+    "result": "-4",
+    "expression": "3 - 7",
+    "id": 56,
+    "timestamp": "2025-01-20 12:47:31.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(12)",
+    "id": 57,
+    "timestamp": "2025-01-20 14:13:30.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(3.4641016151377544)",
+    "id": 58,
+    "timestamp": "2025-01-20 14:13:30.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(12)",
+    "id": 59,
+    "timestamp": "2025-01-20 14:18:29.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(3.4641016151377544)",
+    "id": 60,
+    "timestamp": "2025-01-20 14:18:29.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(12)",
+    "id": 61,
+    "timestamp": "2025-01-20 14:23:41.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(3.4641016151377544)",
+    "id": 62,
+    "timestamp": "2025-01-20 14:23:41.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(12)",
+    "id": 63,
+    "timestamp": "2025-01-20 14:23:57.0"
+  },
+  {
+    "result": "3.4641016151377544",
+    "expression": "sqrt(3.4641016151377544)",
+    "id": 64,
+    "timestamp": "2025-01-20 14:23:57.0"
+  },
+  {
+    "result": "6.48074069840786",
+    "expression": "sqrt(42)",
+    "id": 65,
+    "timestamp": "2025-01-20 14:25:49.0"
+  },
+  {
+    "result": "12",
+    "expression": "12",
+    "id": 66,
+    "timestamp": "2025-01-20 14:32:10.0"
+  }
 ]

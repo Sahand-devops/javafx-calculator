@@ -27,7 +27,7 @@ public class CalculatorController {
             secondNumber = Double.parseDouble(displayText.substring(displayText.lastIndexOf(" ") + 1));
         } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
             display.setText(formatAsIntegerOrDouble(firstNumber));
-            numberHandler.setNewCalculation(true);
+            resetState();
             return;
         }
 
@@ -52,15 +52,16 @@ public class CalculatorController {
                     validOperation = false;
                 }
                 break;
+            case "^":
+                result = Math.pow(firstNumber, secondNumber);
+                break;
             default:
                 validOperation = false;
                 break;
         }
 
         if (validOperation) {
-            display.setText(formatAsIntegerOrDouble(result));
-            String resultString = (result == (long) result) ? String.valueOf((long) result) : String.valueOf(result);
-
+            String resultString = formatAsIntegerOrDouble(result);
             display.setText(resultString);
 
             firstNumber = result;
@@ -69,6 +70,14 @@ public class CalculatorController {
             String expression = displayText;
             DBConnector.insertHistory(expression, resultString);
         }
+
+        // Reset state for further calculations
+        resetState();
+    }
+
+    private void resetState() {
+        waitingForExponent = false;
+        operator = "";
     }
 
     private void exportHistoryToJSON() {
@@ -240,6 +249,17 @@ public class CalculatorController {
         if (displayText.isEmpty()) {
             display.setText("Please enter a number first");
             return;
+        try {
+            SqrtHandler sqrtHandler = new SqrtHandler();
+            String input = display.getText();
+            String result = sqrtHandler.calculateSquareRoot(input);
+            display.setText(result);
+
+            String expression = "sqrt(" + input + ")";
+            DBConnector.insertHistory(expression, result);
+
+        } catch (NumberFormatException e) {
+            display.setText("Error");
         }
 
         // Uppdatera displayen för att visa att användaren har valt sqrt
@@ -247,27 +267,25 @@ public class CalculatorController {
         operator = "sqrt"; // Indikera att kvadratroten valts
     }
 
-
     @FXML
     public void handleExponentiation() {
         try {
-            // Om vi inte väntar på exponent, lagra basen
             if (!waitingForExponent) {
-                base = Double.parseDouble(display.getText()); // Hämta bas från displayen
-                display.clear(); // Rensa displayen för exponentinmatning
-                waitingForExponent = true; // Vänta på exponent
-            } else {
-                // Om vi väntar på exponent, hämta exponenten och beräkna resultatet
-                double exponent = Double.parseDouble(display.getText());
-                double result = exponentiationHandler.calculateExponentiation(base, exponent);
-
-                // Visa resultatet i displayen och återställ flaggan
-                display.setText(String.valueOf(result));
-                waitingForExponent = false;
+                // Store the base for exponentiation
+                firstNumber = Double.parseDouble(display.getText());
+                display.setText(display.getText() + " ^ ");
+                operator = "^";
+                waitingForExponent = true;
+                numberHandler.setNewCalculation(false);
             }
         } catch (NumberFormatException e) {
-            display.setText("Invalid Input"); // Visa felmeddelande vid ogiltig inmatning
-            waitingForExponent = false; // Återställ flödet
+            display.setText("Invalid Input");
+            resetState();
         }
+    }
+
+    @FXML
+    public void handleFactorial(){
+        factorialHandler.calculateFactorial(display);
     }
 }
