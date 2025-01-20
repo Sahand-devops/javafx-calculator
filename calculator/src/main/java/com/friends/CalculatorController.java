@@ -18,6 +18,7 @@ public class CalculatorController {
     public Double base = null; // För att lagra basen
     public boolean waitingForExponent = false; // Indikerar att användaren ska mata in exponent
     public final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
+    public final SqrtHandler sqrtObj = new SqrtHandler();
 
     private void calculate() {
         String displayText = display.getText();
@@ -168,7 +169,6 @@ public class CalculatorController {
     }
 
 
-
     @FXML
     public void handleEqualsClick() {
         if (operator.equals("sqrt")) {
@@ -243,28 +243,29 @@ public class CalculatorController {
     }
 
 
+
     @FXML
     public void handleSquareRootClick() {
         String displayText = display.getText();
         if (displayText.isEmpty()) {
             display.setText("Please enter a number first");
-            return;
-        try {
-            SqrtHandler sqrtHandler = new SqrtHandler();
-            String input = display.getText();
-            String result = sqrtHandler.calculateSquareRoot(input);
-            display.setText(result);
+        } else {
+            try {
+                sqrtObj.calculateSquareRoot(displayText);
+                String input = display.getText();
+                String result = sqrtObj.calculateSquareRoot(input);
+                display.setText(result);
 
-            String expression = "sqrt(" + input + ")";
-            DBConnector.insertHistory(expression, result);
+                String expression = "sqrt(" + input + ")";
 
-        } catch (NumberFormatException e) {
-            display.setText("Error");
+            } catch (NumberFormatException e) {
+                display.setText("Error");
+            }
+
+            // Uppdatera displayen för att visa att användaren har valt sqrt
+            display.setText("sqrt(" + displayText + ")");
+            operator = "sqrt"; // Indikera att kvadratroten valts
         }
-
-        // Uppdatera displayen för att visa att användaren har valt sqrt
-        display.setText("sqrt(" + displayText + ")");
-        operator = "sqrt"; // Indikera att kvadratroten valts
     }
 
     @FXML
@@ -284,8 +285,9 @@ public class CalculatorController {
         }
     }
 
+
     @FXML
-    public void handleFactorial(){
-        factorialHandler.calculateFactorial(display);
+    public void handleFactorial() {
+        FactorialHandler.calculateFactorial(display);
     }
 }
