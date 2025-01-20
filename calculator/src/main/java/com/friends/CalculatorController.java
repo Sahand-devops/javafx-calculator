@@ -15,92 +15,9 @@ public class CalculatorController {
     public String operator = "";
     public final NumberHandler numberHandler = new NumberHandler(true);
     public final EditHandler editHandler = new EditHandler();
-
-    @FXML
-    public void handleNumberClick(javafx.event.ActionEvent event) {
-        String number = ((javafx.scene.control.Button) event.getSource()).getText();
-
-        // Kontrollera om vi väntar på en exponent (kopplat till a^x)
-        if (waitingForExponent && base != null) {
-            try {
-                // Behandla siffran som exponent
-                double exponent = Double.parseDouble(number);
-
-                // Beräkna exponentiering
-                double result = exponentiationHandler.calculateExponentiation(base, exponent);
-
-                // Visa resultatet och återställ flaggor
-                display.setText(String.valueOf(result));
-                base = null;
-                waitingForExponent = false;
-            } catch (NumberFormatException e) {
-                // Hantera ogiltig inmatning för exponent
-                display.setText("Invalid Input");
-                base = null;
-                waitingForExponent = false;
-            }
-        } else {
-            // Om ingen exponentiering väntas, skicka siffran till NumberHandler
-            numberHandler.handleNumberClick(number, display);
-        }
-    }
-
-
-    @FXML
-    public void handleBackspaceClick() {
-        editHandler.removeLastEntry(display);
-    }
-
-    @FXML
-    public void handleOperatorClick(javafx.event.ActionEvent event) {
-        String newOperator = ((javafx.scene.control.Button) event.getSource()).getText();
-        String displayText = display.getText();
-
-        if (!operator.isEmpty() && displayText.contains(" " + operator + " ")) {
-            display.setText(displayText.substring(0, displayText.lastIndexOf(" " + operator + " ")) + " " + newOperator + " ");
-            operator = newOperator;
-            return;
-        }
-
-        if (!operator.isEmpty() && !numberHandler.isNewCalculation()) {
-            calculate();
-        }
-
-        firstNumber = Double.parseDouble(display.getText());
-        operator = newOperator;
-        numberHandler.setNewCalculation(false);
-        numberHandler.setAfterOperator(true);
-
-        display.setText(display.getText() + " " + operator + " ");
-    }
-
-    @FXML
-    public void handleEqualsClick() {
-        if (operator.isEmpty()) {
-            display.setText(formatAsIntegerOrDouble(firstNumber));
-            return;
-        }
-
-        String displayText = display.getText();
-        boolean hasSecondNumber = displayText.trim().endsWith(operator);
-
-        if (hasSecondNumber) {
-            display.setText(formatAsIntegerOrDouble(firstNumber));
-            operator = "";
-            numberHandler.setNewCalculation(true);
-            return;
-        }
-
-        try {
-            calculate();
-        } catch (NumberFormatException e) {
-            display.setText(formatAsIntegerOrDouble(firstNumber));
-        } finally {
-            operator = "";
-        }
-
-        exportHistoryToJSON();
-    }
+    public Double base = null; // För att lagra basen
+    public boolean waitingForExponent = false; // Indikerar att användaren ska mata in exponent
+    public final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
 
     private void calculate() {
         String displayText = display.getText();
@@ -160,6 +77,139 @@ public class CalculatorController {
         System.out.println("History exported to JSON: " + filePath);
     }
 
+    public String formatAsIntegerOrDouble(double number) {
+        return (number == (long) number) ? String.valueOf((long) number) : String.valueOf(number);
+    }
+
+    @FXML
+    public void handleNumberClick(javafx.event.ActionEvent event) {
+        String number = ((javafx.scene.control.Button) event.getSource()).getText();
+
+        // Kontrollera om vi väntar på en exponent (kopplat till a^x)
+        if (waitingForExponent && base != null) {
+            try {
+                // Behandla siffran som exponent
+                double exponent = Double.parseDouble(number);
+
+                // Beräkna exponentiering
+                double result = exponentiationHandler.calculateExponentiation(base, exponent);
+
+                // Visa resultatet och återställ flaggor
+                display.setText(String.valueOf(result));
+                base = null;
+                waitingForExponent = false;
+            } catch (NumberFormatException e) {
+                // Hantera ogiltig inmatning för exponent
+                display.setText("Invalid Input");
+                base = null;
+                waitingForExponent = false;
+            }
+        } else {
+            // Om ingen exponentiering väntas, skicka siffran till NumberHandler
+            numberHandler.handleNumberClick(number, display);
+        }
+    }
+
+
+    @FXML
+    public void handleBackspaceClick() {
+        editHandler.removeLastEntry(display);
+    }
+
+
+    @FXML
+    public void handleOperatorClick(javafx.event.ActionEvent event) {
+        String newOperator = ((javafx.scene.control.Button) event.getSource()).getText();
+        String displayText = display.getText();
+
+        // Check if the operator is 'sqrt'
+        if (newOperator.equals("sqrt")) {
+            operator = "sqrt";
+            // Only add sqrt if it isn't already present
+            if (!displayText.startsWith("sqrt")) {
+                // Remove any operator at the end before adding sqrt
+                if (displayText.matches(".*[\\+\\-\\*/]$")) {
+                    displayText = displayText.substring(0, displayText.length() - 1); // Remove the last operator
+                }
+                // Remove any trailing spaces and then apply sqrt
+                displayText = displayText.trim();
+                display.setText("sqrt(" + displayText + ")");
+            }
+        } else {
+            // Handle case where the operator is being changed from 'sqrt'
+            if (displayText.startsWith("sqrt(")) {
+                // Remove the 'sqrt(' part and the closing parenthesis
+                display.setText(displayText.substring(5, displayText.length() - 1)); // Remove "sqrt(" and ")"
+            }
+
+            if (!operator.isEmpty() && displayText.contains(" " + operator + " ")) {
+                // Replace the operator if it's already present in the expression
+                display.setText(displayText.substring(0, displayText.lastIndexOf(" " + operator + " ")) + " " + newOperator + " ");
+                operator = newOperator;
+                return;
+            }
+
+            firstNumber = Double.parseDouble(display.getText());
+            operator = newOperator;
+            numberHandler.setNewCalculation(false);
+            numberHandler.setAfterOperator(true);
+
+            display.setText(display.getText() + " " + operator + " ");
+        }
+    }
+
+
+
+    @FXML
+    public void handleEqualsClick() {
+        if (operator.equals("sqrt")) {
+            // När användaren trycker på "=", beräkna kvadratroten
+            String displayText = display.getText();
+            displayText = displayText.substring(5, displayText.length() - 1); // Ta bort "sqrt(" och ")"
+
+            SqrtHandler sqrtHandler = new SqrtHandler();
+            String result = sqrtHandler.calculateSquareRoot(displayText);
+
+            if (!result.equals("Invalid input") && !result.equals("Cannot take square root of negative number")) {
+                sqrtHandler.saveToHistory("sqrt(" + displayText + ")", result); // Spara beräkningen
+                display.setText(result); // Visa resultatet
+            } else {
+                display.setText(result); // Visa felmeddelande om ogiltig inmatning
+            }
+
+            operator = ""; // Återställ operatorn
+            numberHandler.setNewCalculation(true); // Starta en ny beräkning
+            return;
+        }
+
+        // Hantera andra operatorer
+        if (operator.isEmpty()) {
+            display.setText(formatAsIntegerOrDouble(firstNumber));
+            return;
+        }
+
+        String displayText = display.getText();
+        boolean hasSecondNumber = displayText.trim().endsWith(operator);
+
+        if (hasSecondNumber) {
+            display.setText(formatAsIntegerOrDouble(firstNumber));
+            operator = "";
+            numberHandler.setNewCalculation(true);
+            return;
+        }
+
+        try {
+            calculate();
+        } catch (NumberFormatException e) {
+            display.setText(formatAsIntegerOrDouble(firstNumber));
+        } finally {
+            operator = "";
+        }
+
+        exportHistoryToJSON();
+    }
+
+
     @FXML
     public void handleClearClick() {
         display.setText("");
@@ -168,9 +218,6 @@ public class CalculatorController {
         numberHandler.setNewCalculation(true);
     }
 
-    public String formatAsIntegerOrDouble(double number) {
-        return (number == (long) number) ? String.valueOf((long) number) : String.valueOf(number);
-    }
 
     @FXML
     public void handleHistoryClick() {
@@ -186,28 +233,20 @@ public class CalculatorController {
         }
     }
 
+
     @FXML
     public void handleSquareRootClick() {
-
-        try {
-            SqrtHandler sqrtHandler = new SqrtHandler();
-            String result = sqrtHandler.calculateSquareRoot(display.getText());
-            display.setText(result);
-            String input = display.getText();
-            display.setText(result);
-
-            String expression = "sqrt(" + input + ")";
-            DBConnector.insertHistory(expression, result);
-
-        } catch (NumberFormatException e) {
-            display.setText("Error");
+        String displayText = display.getText();
+        if (displayText.isEmpty()) {
+            display.setText("Please enter a number first");
+            return;
         }
+
+        // Uppdatera displayen för att visa att användaren har valt sqrt
+        display.setText("sqrt(" + displayText + ")");
+        operator = "sqrt"; // Indikera att kvadratroten valts
     }
 
-
-    public Double base = null; // För att lagra basen
-    public boolean waitingForExponent = false; // Indikerar att användaren ska mata in exponent
-    public final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
 
     @FXML
     public void handleExponentiation() {
