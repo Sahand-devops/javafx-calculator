@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.*;
 
 public class DBConnector {
@@ -78,6 +79,10 @@ public class DBConnector {
         }
     }
 
+    public static String getJsonFilePath(String s) {
+        return Paths.get("calculator/src/main/resources/history.json").toAbsolutePath().toString();
+    }
+
     public static void deleteHistoryEntry(int id) {
         String deleteSQL = "DELETE FROM history WHERE id = ?";
 
@@ -105,6 +110,6 @@ public class DBConnector {
 
     public static void main(String[] args) {
         createHistoryTable();
-        exportHistoryToJSON("history.json");
+        exportHistoryToJSON(getJsonFilePath("calculator/src/main/resources/history.json"));
     }
 }
