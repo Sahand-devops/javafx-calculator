@@ -24,8 +24,32 @@ public class CalculatorController {
     @FXML
     public void handleNumberClick(javafx.event.ActionEvent event) {
         String number = ((javafx.scene.control.Button) event.getSource()).getText();
-        numberHandler.handleNumberClick(number, display);
+
+        // Kontrollera om vi väntar på en exponent (kopplat till a^x)
+        if (waitingForExponent && base != null) {
+            try {
+                // Behandla siffran som exponent
+                double exponent = Double.parseDouble(number);
+
+                // Beräkna exponentiering
+                double result = exponentiationHandler.calculateExponentiation(base, exponent);
+
+                // Visa resultatet och återställ flaggor
+                display.setText(String.valueOf(result));
+                base = null;
+                waitingForExponent = false;
+            } catch (NumberFormatException e) {
+                // Hantera ogiltig inmatning för exponent
+                display.setText("Invalid Input");
+                base = null;
+                waitingForExponent = false;
+            }
+        } else {
+            // Om ingen exponentiering väntas, skicka siffran till NumberHandler
+            numberHandler.handleNumberClick(number, display);
+        }
     }
+
 
     @FXML
     public void handleBackspaceClick() {
@@ -190,5 +214,33 @@ public class CalculatorController {
         String result = sqrtHandler.calculateSquareRoot(display.getText());
         display.setText(result);
     }
+    @FXML
+    private Double base = null; // För att lagra basen
+    private boolean waitingForExponent = false; // Indikerar att användaren ska mata in exponent
 
+    // Instans av ExponentiationHandler
+    private final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
+
+    @FXML
+    private void handleExponentiation() {
+        try {
+            // Om vi inte väntar på exponent, lagra basen
+            if (!waitingForExponent) {
+                base = Double.parseDouble(display.getText()); // Hämta bas från displayen
+                display.clear(); // Rensa displayen för exponentinmatning
+                waitingForExponent = true; // Vänta på exponent
+            } else {
+                // Om vi väntar på exponent, hämta exponenten och beräkna resultatet
+                double exponent = Double.parseDouble(display.getText());
+                double result = exponentiationHandler.calculateExponentiation(base, exponent);
+
+                // Visa resultatet i displayen och återställ flaggan
+                display.setText(String.valueOf(result));
+                waitingForExponent = false;
+            }
+        } catch (NumberFormatException e) {
+            display.setText("Invalid Input"); // Visa felmeddelande vid ogiltig inmatning
+            waitingForExponent = false; // Återställ flödet
+        }
+    }
 }
