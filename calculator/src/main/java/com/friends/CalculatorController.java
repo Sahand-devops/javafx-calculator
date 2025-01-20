@@ -15,6 +15,8 @@ public class CalculatorController {
     public String operator = "";
     public final NumberHandler numberHandler = new NumberHandler(true);
     public final EditHandler editHandler = new EditHandler();
+    public final FactorialHandler factorialHandler = new FactorialHandler();
+
 
     public Double base = null; // To store the base for exponentiation
     public boolean waitingForExponent = false; // Flag to indicate waiting for exponent
@@ -195,5 +197,10 @@ public class CalculatorController {
             display.setText("Invalid Input");
             resetState();
         }
+    }
+
+    @FXML
+    public void handleFactorial(){
+        factorialHandler.calculateFactorial(display);
     }
 }
