@@ -287,5 +287,5 @@ $RECYCLE.BIN/
 *.lnk
 
 
-custom ignore
+#custom ignore
 history.json
