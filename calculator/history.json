@@ -1,1 +1,116 @@
-[]
+[
+    {
+        "result": "0.5384615384615384",
+        "expression": "78",
+        "id": 7,
+        "timestamp": "2025-01-16 16:29:03.0"
+    },
+    {
+        "result": "39",
+        "expression": "78 / 2",
+        "id": 8,
+        "timestamp": "2025-01-16 16:29:24.0"
+    },
+    {
+        "result": "16",
+        "expression": "8 + 8",
+        "id": 9,
+        "timestamp": "2025-01-16 16:38:21.0"
+    },
+    {
+        "result": "24",
+        "expression": "16 + 8",
+        "id": 10,
+        "timestamp": "2025-01-16 16:39:11.0"
+    },
+    {
+        "result": "29",
+        "expression": "24 + 5",
+        "id": 11,
+        "timestamp": "2025-01-16 16:40:41.0"
+    },
+    {
+        "result": "16",
+        "expression": "8 + 8",
+        "id": 12,
+        "timestamp": "2025-01-16 16:44:05.0"
+    },
+    {
+        "result": "24",
+        "expression": "16 + 8",
+        "id": 13,
+        "timestamp": "2025-01-16 16:44:09.0"
+    },
+    {
+        "result": "32",
+        "expression": "24 + 8",
+        "id": 14,
+        "timestamp": "2025-01-16 16:44:14.0"
+    },
+    {
+        "result": "37",
+        "expression": "32 + 5",
+        "id": 15,
+        "timestamp": "2025-01-16 16:44:19.0"
+    },
+    {
+        "result": "40",
+        "expression": "37 + 3",
+        "id": 16,
+        "timestamp": "2025-01-16 16:44:30.0"
+    },
+    {
+        "result": "42",
+        "expression": "40 + 2",
+        "id": 17,
+        "timestamp": "2025-01-16 16:45:49.0"
+    },
+    {
+        "result": "8008141",
+        "expression": "8008135 + 6",
+        "id": 19,
+        "timestamp": "2025-01-16 21:58:26.0"
+    },
+    {
+        "result": "0.09836065573770492",
+        "expression": "122",
+        "id": 20,
+        "timestamp": "2025-01-20 10:13:22.0"
+    },
+    {
+        "result": "0.1",
+        "expression": "10",
+        "id": 21,
+        "timestamp": "2025-01-20 10:13:31.0"
+    },
+    {
+        "result": "0.1",
+        "expression": "10",
+        "id": 22,
+        "timestamp": "2025-01-20 10:15:54.0"
+    },
+    {
+        "result": "0.05",
+        "expression": "20",
+        "id": 23,
+        "timestamp": "2025-01-20 10:16:19.0"
+    },
+    {
+        "result": "83",
+        "expression": "75 + 8",
+        "id": 24,
+        "timestamp": "2025-01-20 10:17:45.0"
+    },
+    {
+        "result": "415",
+        "expression": "83 * 5",
+        "id": 25,
+        "timestamp": "2025-01-20 10:17:47.0"
+    },
+    {
+        "result": "411",
+        "expression": "415 - 4",
+        "id": 26,
+        "timestamp": "2025-01-20 10:17:48.0"
+    }
+]
