@@ -5,13 +5,14 @@ import org.json.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.*;
 
 public class DBConnector {
 
     private static final String URL = "jdbc:mariadb://localhost:3306/Calculator";
     private static final String USER = "root";
-    private static final String PASSWORD = "p";
+    private static final String PASSWORD = "";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -78,6 +79,10 @@ public class DBConnector {
         }
     }
 
+    public static String getJsonFilePath() {
+        return Paths.get("src/main/resources/history.json").toAbsolutePath().toString();
+    }
+
     public static void deleteHistoryEntry(int id) {
         String deleteSQL = "DELETE FROM history WHERE id = ?";
 
@@ -105,6 +110,6 @@ public class DBConnector {
 
     public static void main(String[] args) {
         createHistoryTable();
-        exportHistoryToJSON("history.json");
+        exportHistoryToJSON(getJsonFilePath());
     }
 }
