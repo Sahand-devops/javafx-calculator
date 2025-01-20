@@ -9,15 +9,12 @@ import javafx.stage.Stage;
 
 public class CalculatorController {
     @FXML
-    private TextField display;
+    public TextField display;
 
-    private double firstNumber = 0;
-    private String operator = "";
-    private final NumberHandler numberHandler = new NumberHandler(true);
-
-    private final EditHandler editHandler = new EditHandler();
-
-    private final SqrtHandler SqrtObj = new SqrtHandler();
+    public double firstNumber = 0;
+    public String operator = "";
+    public final NumberHandler numberHandler = new NumberHandler(true);
+    public final EditHandler editHandler = new EditHandler();
 
     @FXML
     public void handleNumberClick(javafx.event.ActionEvent event) {
@@ -191,16 +188,12 @@ public class CalculatorController {
 
     @FXML
     public void handleSquareRootClick() {
-        Exponentials
-        SqrtHandler sqrtHandler = new SqrtHandler();
-        String result = sqrtHandler.calculateSquareRoot(display.getText());
-        display.setText(result);
-    }
+
         try {
             SqrtHandler sqrtHandler = new SqrtHandler();
+            String result = sqrtHandler.calculateSquareRoot(display.getText());
+            display.setText(result);
             String input = display.getText();
-            String result = sqrtHandler.calculateSquareRoot(input);
-
             display.setText(result);
 
             String expression = "sqrt(" + input + ")";
@@ -208,18 +201,16 @@ public class CalculatorController {
 
         } catch (NumberFormatException e) {
             display.setText("Error");
-            main
         }
     }
-    @FXML
-    private Double base = null; // För att lagra basen
-    private boolean waitingForExponent = false; // Indikerar att användaren ska mata in exponent
 
-    // Instans av ExponentiationHandler
-    private final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
+
+    public Double base = null; // För att lagra basen
+    public boolean waitingForExponent = false; // Indikerar att användaren ska mata in exponent
+    public final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
 
     @FXML
-    private void handleExponentiation() {
+    public void handleExponentiation() {
         try {
             // Om vi inte väntar på exponent, lagra basen
             if (!waitingForExponent) {
@@ -238,4 +229,6 @@ public class CalculatorController {
         } catch (NumberFormatException e) {
             display.setText("Invalid Input"); // Visa felmeddelande vid ogiltig inmatning
             waitingForExponent = false; // Återställ flödet
+        }
+    }
 }

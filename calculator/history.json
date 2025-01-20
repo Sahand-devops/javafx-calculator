@@ -1,44 +1,6 @@
-[
-    {
-        "result": "61",
-        "expression": "56 + 5",
-        "id": 21,
-        "timestamp": "2025-01-20 09:52:26.0"
-    },
-    {
-        "result": "15.700000000000001",
-        "expression": "5 * 3.14",
-        "id": 22,
-        "timestamp": "2025-01-20 10:34:57.0"
-    },
-    {
-        "result": "61",
-        "expression": "56 + 5",
-        "id": 23,
-        "timestamp": "2025-01-20 10:35:10.0"
-    },
-    {
-        "result": "2.449489742783178",
-        "expression": "sqrt(6)",
-        "id": 24,
-        "timestamp": "2025-01-20 10:38:25.0"
-    },
-    {
-        "result": "3",
-        "expression": "sqrt(9)",
-        "id": 25,
-        "timestamp": "2025-01-20 10:38:58.0"
-    },
-    {
-        "result": "3",
-        "expression": "sqrt(9)",
-        "id": 26,
-        "timestamp": "2025-01-20 10:38:59.0"
-    },
-    {
-        "result": "2.449489742783178",
-        "expression": "sqrt(6)",
-        "id": 27,
-        "timestamp": "2025-01-20 10:39:58.0"
-    }
-]
+[{
+    "result": "3",
+    "expression": "sqrt(9)",
+    "id": 6,
+    "timestamp": "2025-01-20 11:59:08.0"
+}]
