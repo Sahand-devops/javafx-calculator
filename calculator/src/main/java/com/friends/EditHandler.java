@@ -27,6 +27,7 @@ public class EditHandler {
         } else {
             // Fallback behavior: remove the last character
             display.setText(currentText.substring(0, currentText.length() - 1));
+
         }
     }
 }
