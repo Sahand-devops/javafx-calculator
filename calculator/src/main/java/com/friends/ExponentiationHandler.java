@@ -1,6 +1,6 @@
-package com.friends; // Se till att paketet matchar din struktur
+package com.friends;
 
-class ExponentiationHandler {
+public class ExponentiationHandler {
 
     // Metod för att beräkna exponentiering
     public double calculateExponentiation(double base, double exponent) {
