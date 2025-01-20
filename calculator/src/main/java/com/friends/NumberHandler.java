@@ -3,26 +3,36 @@ package com.friends;
 import javafx.scene.control.TextField;
 
 public class NumberHandler {
-    private boolean isNewCalculation;
+    private boolean newCalculation;
+    private boolean afterOperator;
 
-    public NumberHandler(boolean isNewCalculation) {
-        this.isNewCalculation = isNewCalculation;
+    public NumberHandler(boolean newCalculation) {
+        this.newCalculation = newCalculation;
+        this.afterOperator = false;
     }
 
     public void handleNumberClick(String number, TextField display) {
-        if (isNewCalculation) {
+        if (newCalculation) {
             display.setText(number);
-            isNewCalculation = false;
+            newCalculation = false;
+        } else if (afterOperator) {
+            display.setText(display.getText() + number);
+            afterOperator = false;
         } else {
             display.setText(display.getText() + number);
         }
     }
 
-    public boolean isNewCalculation() {
-        return isNewCalculation;
+    public void setNewCalculation(boolean newCalculation) {
+        this.newCalculation = newCalculation;
     }
 
-    public void setNewCalculation(boolean newCalculation) {
-        isNewCalculation = newCalculation;
+    public boolean isNewCalculation() {
+        return newCalculation;
+    }
+
+    public void setAfterOperator(boolean afterOperator) {
+        this.afterOperator = afterOperator;
     }
 }
+
