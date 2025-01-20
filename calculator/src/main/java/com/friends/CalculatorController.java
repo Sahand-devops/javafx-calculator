@@ -1,145 +1,221 @@
 package com.friends;
 
-import com.friends.operators.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import java.util.HashMap;
-import java.util.Map;
+import javafx.stage.Stage;
 
 public class CalculatorController {
     @FXML
     public TextField display;
+
     public double firstNumber = 0;
     public String operator = "";
-    public final Map<String, Operator> operatorMap = new HashMap<>();
-
-    // Indikerar om vi väntar på att användaren ska mata in exponenten
-    public boolean waitingForExponent = false;
-
-    // NumberHandler för att hantera nummerinmatning
     public final NumberHandler numberHandler = new NumberHandler(true);
+    public final EditHandler editHandler = new EditHandler();
+    public Double base = null; // För att lagra basen
+    public boolean waitingForExponent = false; // Indikerar att användaren ska mata in exponent
+    public final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
+    public final SqrtHandler sqrtObj = new SqrtHandler();
 
-    public CalculatorController() {
-        // Registrera alla operatorer
-        operatorMap.put("+", new AdditionOperator());
-        operatorMap.put("-", new SubtractionOperator());
-        operatorMap.put("*", new MultiplicationOperator());
-        operatorMap.put("/", new DivisionOperator());
-        operatorMap.put("^", new ExponentiationOperator());
+    private void calculate() {
+        String displayText = display.getText();
+        double secondNumber;
+
+        try {
+            secondNumber = Double.parseDouble(displayText.substring(displayText.lastIndexOf(" ") + 1));
+        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+            display.setText(formatAsIntegerOrDouble(firstNumber));
+            resetState();
+            return;
+        }
+
+        double result = 0;
+        boolean validOperation = true;
+
+        switch (operator) {
+            case "+":
+                result = firstNumber + secondNumber;
+                break;
+            case "-":
+                result = firstNumber - secondNumber;
+                break;
+            case "*":
+                result = firstNumber * secondNumber;
+                break;
+            case "/":
+                if (secondNumber != 0) {
+                    result = firstNumber / secondNumber;
+                } else {
+                    display.setText("Cannot divide by zero");
+                    validOperation = false;
+                }
+                break;
+            case "%":
+                result = (firstNumber / secondNumber) * 100;
+                display.setText(formatAsIntegerOrDouble(result) + " % ");
+                break;
+            case "^":
+                result = Math.pow(firstNumber, secondNumber);
+                break;
+            default:
+                validOperation = false;
+                break;
+        }
+
+        if (validOperation && !operator.equals("%")) {
+            String resultString = formatAsIntegerOrDouble(result);
+            display.setText(resultString);
+
+            firstNumber = result;
+            numberHandler.setNewCalculation(true);
+
+            String expression = displayText;
+            DBConnector.insertHistory(expression, resultString);
+        }
+
+        resetState();
+    }
+
+
+    private void resetState() {
+        waitingForExponent = false;
+        operator = "";
+    }
+
+    private void exportHistoryToJSON() {
+        String filePath = "history.json";
+        DBConnector.exportHistoryToJSON(filePath);
+        System.out.println("History exported to JSON: " + filePath);
+    }
+
+    public String formatAsIntegerOrDouble(double number) {
+        return (number == (long) number) ? String.valueOf((long) number) : String.valueOf(number);
+    }
+
+    @FXML
+    public void handleNumberClick(javafx.event.ActionEvent event) {
+        String number = ((javafx.scene.control.Button) event.getSource()).getText();
+
+        if (waitingForExponent && base != null) {
+            try {
+                double exponent = Double.parseDouble(number);
+                double result = exponentiationHandler.calculateExponentiation(base, exponent);
+                display.setText(String.valueOf(result));
+                base = null;
+                waitingForExponent = false;
+            } catch (NumberFormatException e) {
+                display.setText("Invalid Input");
+                base = null;
+                waitingForExponent = false;
+            }
+        } else {
+            numberHandler.handleNumberClick(number, display);
+        }
+    }
+
+    @FXML
+    public void handleBackspaceClick() {
+        editHandler.removeLastEntry(display);
+    }
+
+    @FXML
+    public void handleOperatorClick(javafx.event.ActionEvent event) {
+        String newOperator = ((javafx.scene.control.Button) event.getSource()).getText();
+        String displayText = display.getText();
+
+        if (!operator.isEmpty() && displayText.contains(" " + operator + " ")) {
+            display.setText(displayText.substring(0, displayText.lastIndexOf(" " + operator + " ")) + " " + newOperator + " ");
+            operator = newOperator;
+            return;
+        }
+
+        firstNumber = Double.parseDouble(display.getText());
+        operator = newOperator;
+        numberHandler.setNewCalculation(false);
+        numberHandler.setAfterOperator(true);
+
+        display.setText(display.getText() + " " + operator + " ");
+    }
+
+    @FXML
+    public void handleEqualsClick() {
+        if (operator.isEmpty()) {
+            display.setText(formatAsIntegerOrDouble(firstNumber));
+            return;
+        }
+
+        try {
+            calculate();
+        } catch (NumberFormatException e) {
+            display.setText(formatAsIntegerOrDouble(firstNumber));
+        } finally {
+            operator = "";
+        }
+
+        exportHistoryToJSON();
+    }
+
+    @FXML
+    public void handleClearClick() {
+        display.setText("");
+        firstNumber = 0;
+        operator = "";
+        numberHandler.setNewCalculation(true);
+    }
+
+    @FXML
+    public void handleHistoryClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/history.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Calculation History");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void handleSquareRootClick() {
+        String displayText = display.getText();
+        if (displayText.isEmpty()) {
+            display.setText("Please enter a number first");
+        } else {
+            try {
+                sqrtObj.calculateSquareRoot(displayText);
+                String input = display.getText();
+                String result = sqrtObj.calculateSquareRoot(input);
+                display.setText(result);
+                String expression = "sqrt(" + input + ")";
+            } catch (NumberFormatException e) {
+                display.setText("Error");
+            }
+        }
     }
 
     @FXML
     public void handleExponentiation() {
         try {
             if (!waitingForExponent) {
-                // Spara basen
                 firstNumber = Double.parseDouble(display.getText());
                 display.setText(display.getText() + " ^ ");
                 operator = "^";
                 waitingForExponent = true;
-            } else {
-                // Felhantering om exponent redan är på plats
-                display.setText("Press '=' to calculate");
+                numberHandler.setNewCalculation(false);
             }
         } catch (NumberFormatException e) {
             display.setText("Invalid Input");
-            resetState(); // Metod för att återställa tillstånd om fel uppstår
-        }
-    }
-    @FXML
-    public void handleSquareRootClick() {
-        try {
-            double number = Double.parseDouble(display.getText());
-            if (number < 0) {
-                display.setText("Invalid Input");
-                return;
-            }
-            double result = Math.sqrt(number);
-            display.setText(String.valueOf(result));
-        } catch (NumberFormatException e) {
-            display.setText("Invalid Input");
-        }
-    }
-    @FXML
-    public void handleFactorial() {
-        try {
-            int number = Integer.parseInt(display.getText());
-            if (number < 0) {
-                display.setText("Invalid Input");
-                return;
-            }
-            int result = 1;
-            for (int i = 1; i <= number; i++) {
-                result *= i;
-            }
-            display.setText(String.valueOf(result));
-        } catch (NumberFormatException e) {
-            display.setText("Invalid Input");
-        }
-    }
-
-
-    @FXML
-    public void handleNumberClick(javafx.event.ActionEvent event) {
-        String number = ((javafx.scene.control.Button) event.getSource()).getText();
-        numberHandler.handleNumberClick(number, display); // Använder numberHandler
-    }
-
-    @FXML
-    public void handleOperatorClick(javafx.event.ActionEvent event) {
-        String newOperator = ((javafx.scene.control.Button) event.getSource()).getText();
-        firstNumber = Double.parseDouble(display.getText());
-        operator = newOperator;
-        display.setText(display.getText() + " " + operator + " ");
-    }
-    @FXML
-    public void handleHistoryClick() {
-        // Exempelimplementation för att hantera historik
-        System.out.println("History button clicked!");
-        // Du kan implementera logik här, som att visa en historik av beräkningar
-    }
-    @FXML
-    public void handleBackspaceClick() {
-        // Kolla om displayen inte är tom
-        String currentText = display.getText();
-        if (!currentText.isEmpty()) {
-            // Ta bort sista tecknet
-            display.setText(currentText.substring(0, currentText.length() - 1));
-        }
-    }
-
-    @FXML
-    public void handleEqualsClick() {
-        try {
-            String displayText = display.getText();
-            double secondNumber = Double.parseDouble(displayText.substring(displayText.lastIndexOf(" ") + 1));
-
-            Operator operation = operatorMap.get(operator);
-            if (operation != null) {
-                double result = operation.calculate(firstNumber, secondNumber);
-                display.setText(String.valueOf(result));
-                firstNumber = result;
-            } else {
-                display.setText("Invalid Operation");
-            }
-        } catch (Exception e) {
-            display.setText("Error");
-        } finally {
             resetState();
         }
     }
 
     @FXML
-    public void handleClearClick() {
-        display.clear();
-        firstNumber = 0;
-        operator = "";
-        resetState();
-    }
-
-    // Metod för att återställa tillståndet efter en operation eller vid fel
-    private void resetState() {
-        waitingForExponent = false;
-        operator = "";
+    public void handleFactorial() {
+        FactorialHandler.calculateFactorial(display);
     }
 }
