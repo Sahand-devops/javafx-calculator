@@ -18,7 +18,6 @@ public class CalculatorController {
     public Double base = null; // För att lagra basen
     public boolean waitingForExponent = false; // Indikerar att användaren ska mata in exponent
     public final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
-    public final SqrtHandler sqrtObj = new SqrtHandler();
 
     private void calculate() {
         String displayText = display.getText();
@@ -126,24 +125,86 @@ public class CalculatorController {
         String newOperator = ((javafx.scene.control.Button) event.getSource()).getText();
         String displayText = display.getText();
 
-        if (!operator.isEmpty() && displayText.contains(" " + operator + " ")) {
-            display.setText(displayText.substring(0, displayText.lastIndexOf(" " + operator + " ")) + " " + newOperator + " ");
+        // Check if the operator is 'sqrt'
+        if (newOperator.equals("sqrt")) {
+            operator = "sqrt";
+            // Only add sqrt if it isn't already present
+            if (!displayText.startsWith("sqrt")) {
+                // Remove any operator at the end before adding sqrt
+                if (displayText.matches(".*[\\+\\-\\*/]$")) {
+                    displayText = displayText.substring(0, displayText.length() - 1); // Remove the last operator
+                }
+                // Remove any trailing spaces and then apply sqrt
+                displayText = displayText.trim();
+                display.setText("sqrt(" + displayText + ")");
+            }
+        } else {
+            // Handle case where the operator is being changed from 'sqrt'
+            if (displayText.startsWith("sqrt(")) {
+                // Remove the 'sqrt(' part and the closing parenthesis
+                display.setText(displayText.substring(5, displayText.length() - 1)); // Remove "sqrt(" and ")"
+            }
+
+            if (!operator.isEmpty() && displayText.contains(" " + operator + " ")) {
+                // Replace the operator if it's already present in the expression
+                display.setText(displayText.substring(0, displayText.lastIndexOf(" " + operator + " ")) + " " + newOperator + " ");
+                operator = newOperator;
+                return;
+            }
+
+            firstNumber = Double.parseDouble(display.getText());
             operator = newOperator;
-            return;
+            numberHandler.setNewCalculation(false);
+            numberHandler.setAfterOperator(true);
+
+            display.setText(display.getText() + " " + operator + " ");
         }
-
-        firstNumber = Double.parseDouble(display.getText());
-        operator = newOperator;
-        numberHandler.setNewCalculation(false);
-        numberHandler.setAfterOperator(true);
-
-        display.setText(display.getText() + " " + operator + " ");
     }
+
 
     @FXML
     public void handleEqualsClick() {
+        String displayText = display.getText();
+
+        // If the operator is "sqrt", remove "sqrt(" and ")" if the user changes the operator
+        if (operator.equals("sqrt")) {
+            // Check if the user has changed the operator
+            if (!displayText.startsWith("sqrt(")) {
+                // User changed the operator, remove "sqrt()" from the display
+                displayText = displayText.substring(5, displayText.length() - 1); // Remove "sqrt(" and ")"
+            }
+
+            if (displayText.startsWith("sqrt(")) {
+                // Calculate square root
+                displayText = displayText.substring(5, displayText.length() - 1); // Remove "sqrt(" and ")"
+                SqrtHandler sqrtHandler = new SqrtHandler();
+                String result = sqrtHandler.calculateSquareRoot(displayText);
+
+                if (!result.equals("Invalid input") && !result.equals("Cannot take square root of negative number")) {
+                    sqrtHandler.saveToHistory("sqrt(" + displayText + ")", result); // Save to history
+                    display.setText(result); // Show result
+                } else {
+                    display.setText(result); // Show error message
+                }
+
+                operator = ""; // Reset operator
+                numberHandler.setNewCalculation(true); // Start a new calculation
+                return;
+            }
+        }
+
+        // Handle other operators (like +, -, etc.)
         if (operator.isEmpty()) {
             display.setText(formatAsIntegerOrDouble(firstNumber));
+            return;
+        }
+
+        boolean hasSecondNumber = displayText.trim().endsWith(operator);
+
+        if (hasSecondNumber) {
+            display.setText(formatAsIntegerOrDouble(firstNumber));
+            operator = "";
+            numberHandler.setNewCalculation(true);
             return;
         }
 
@@ -157,6 +218,7 @@ public class CalculatorController {
 
         exportHistoryToJSON();
     }
+
 
     @FXML
     public void handleClearClick() {
@@ -182,21 +244,21 @@ public class CalculatorController {
 
     @FXML
     public void handleSquareRootClick() {
-        String displayText = display.getText();
-        if (displayText.isEmpty()) {
-            display.setText("Please enter a number first");
-        } else {
-            try {
-                sqrtObj.calculateSquareRoot(displayText);
-                String input = display.getText();
-                String result = sqrtObj.calculateSquareRoot(input);
-                display.setText(result);
-                String expression = "sqrt(" + input + ")";
-            } catch (NumberFormatException e) {
-                display.setText("Error");
-            }
+        String displayText = display.getText().trim();
+
+        if (displayText.matches(".*[\\+\\-\\*/]$")) {
+            displayText = displayText.substring(0, displayText.length() - 1).trim();
+        }
+
+        try {
+            double number = Double.parseDouble(displayText);
+            display.setText("sqrt(" + formatAsIntegerOrDouble(number) + ")");
+            operator = "sqrt";
+        } catch (NumberFormatException e) {
+            display.setText("Invalid Input");
         }
     }
+
 
     @FXML
     public void handleExponentiation() {
