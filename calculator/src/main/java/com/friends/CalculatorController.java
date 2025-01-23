@@ -27,6 +27,10 @@ public class CalculatorController {
     private final MemoryControl memoryAdd = new MemoryControl.MemoryAdd();
     private final MemoryControl memorySubtract = new MemoryControl.MemorySubtract();
 
+    // lambda
+    public final java.util.function.Function<Double, String> formatAsIntegerOrDouble =
+            number -> (number.doubleValue() == number.longValue()) ? String.valueOf(number.longValue()) : String.valueOf(number);
+
     private void calculate() {
         String displayText = display.getText();
         double secondNumber;
@@ -35,7 +39,7 @@ public class CalculatorController {
             // Parse the second number from the display text
             secondNumber = Double.parseDouble(displayText.substring(displayText.lastIndexOf(" ") + 1));
         } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-            display.setText(formatAsIntegerOrDouble(firstNumber));
+            display.setText(formatAsIntegerOrDouble.apply(firstNumber));
             resetState();
             return;
         }
@@ -64,7 +68,7 @@ public class CalculatorController {
                 break;
             case "%":
                 result = (firstNumber / secondNumber) * 100;
-                display.setText(formatAsIntegerOrDouble(result) + " % ");
+                display.setText(formatAsIntegerOrDouble.apply(result) + " % ");
                 break;
             case "^":
                 result = Math.pow(firstNumber, secondNumber);
@@ -76,7 +80,7 @@ public class CalculatorController {
 
         // Display result if valid operation
         if (validOperation && !operator.equals("%")) {
-            String resultString = formatAsIntegerOrDouble(result);
+            String resultString = formatAsIntegerOrDouble.apply(result);
             display.setText(resultString);
 
             firstNumber = result;
@@ -115,10 +119,6 @@ public class CalculatorController {
         System.out.println("History exported to JSON: " + filePath);
     }
 
-    public String formatAsIntegerOrDouble(double number) {
-        return (number == (long) number) ? String.valueOf((long) number) : String.valueOf(number);
-    }
-
     @FXML
     public void handleNumberClick(javafx.event.ActionEvent event) {
         String number = ((javafx.scene.control.Button) event.getSource()).getText();
@@ -150,11 +150,25 @@ public class CalculatorController {
         String newOperator = ((javafx.scene.control.Button) event.getSource()).getText();
         String displayText = display.getText();
 
+
+        if (newOperator.equals("sqrt")) {
+            operator = "sqrt";
+            if (!displayText.startsWith("sqrt")) {
+                // Remove any operator at the end before adding sqrt
+                if (displayText.matches(".*[\\+\\-\\*/]$")) {
+                    displayText = displayText.substring(0, displayText.length() - 1); // Remove the last operator
+                }
+                displayText = displayText.trim();
+                display.setText("sqrt(" + displayText + ")");
+            }
+            firstNumber = Double.parseDouble(displayText.replace("sqrt(", "").replace(")", "").trim());
+
         // If the display contains "π", set Pi as firstNumber
         if (displayText.equals("π") || displayText.equals(String.format("%.2f", PiCalculator.getPi()))) {
             firstNumber = PiCalculator.getPi();  // Store Pi as the first number
             operator = newOperator;
             display.setText(String.format("%.2f", firstNumber) + " " + operator + " ");  // Update display with Pi and operator
+
         } else {
             // Regular operator handling: If operator is already set, update it
             if (!operator.isEmpty() && displayText.contains(" " + operator + " ")) {
@@ -176,15 +190,57 @@ public class CalculatorController {
     public void handleEqualsClick() {
         String displayText = display.getText();
 
+
+        if (operator.equals("sqrt")) {
+            if (!displayText.startsWith("sqrt(")) {
+                displayText = displayText.substring(5, displayText.length() - 1); // Remove "sqrt(" and ")"
+            }
+
+            if (displayText.startsWith("sqrt(")) {
+                displayText = displayText.substring(5, displayText.length() - 1); // Remove "sqrt(" and ")"
+                SqrtHandler sqrtHandler = new SqrtHandler();
+                String result = sqrtHandler.calculateSquareRoot(displayText);
+
+                if (!result.equals("Invalid input") && !result.equals("Cannot take square root of negative number")) {
+                    sqrtHandler.saveToHistory("sqrt(" + displayText + ")", result); // Save to history
+                    display.setText(result); // Show result
+                } else {
+                    display.setText(result); // Show error message
+                }
+
+                operator = "";
+                numberHandler.setNewCalculation(true);
+                return;
+            }
+        }
+
+
         // If the operator is empty, just return the first number
+
         if (operator.isEmpty()) {
-            display.setText(formatAsIntegerOrDouble(firstNumber));
+            display.setText(formatAsIntegerOrDouble.apply(firstNumber));
             return;
         }
 
         // Parse the second number after the operator (it's the number you want to operate with)
         double secondNumber = Double.parseDouble(displayText.substring(displayText.lastIndexOf(" ") + 1));
         double result = 0;
+
+
+        if (hasSecondNumber) {
+            display.setText(formatAsIntegerOrDouble.apply(firstNumber));
+            operator = "";
+            numberHandler.setNewCalculation(true);
+            return;
+        }
+
+        try {
+            calculate();
+        } catch (NumberFormatException e) {
+            display.setText(formatAsIntegerOrDouble.apply(firstNumber));
+        } finally {
+            operator = "";
+        }
 
         // Perform operation based on the operator
         switch (operator) {
@@ -214,6 +270,7 @@ public class CalculatorController {
         String resultString = formatAsIntegerOrDouble(result);
         display.setText(resultString);
         firstNumber = result;  // Store the result for future calculations
+
 
         // Add to history (if necessary)
         addToHistory(displayText + " = " + resultString, resultString);
@@ -253,7 +310,7 @@ public class CalculatorController {
 
         try {
             double number = Double.parseDouble(displayText);
-            display.setText("sqrt(" + formatAsIntegerOrDouble(number) + ")");
+            display.setText("sqrt(" + formatAsIntegerOrDouble.apply(number) + ")");
             operator = "sqrt";
         } catch (NumberFormatException e) {
             display.setText("Invalid Input");
@@ -273,18 +330,13 @@ public class CalculatorController {
                 String displayText = display.getText();
                 double exponent = Double.parseDouble(displayText.substring(displayText.lastIndexOf("^") + 2));
                 double result = Math.pow(firstNumber, exponent);
-                String resultString = formatAsIntegerOrDouble(result);
+                String resultString = formatAsIntegerOrDouble.apply(result);
 
-                // Display result
                 display.setText(resultString);
 
-                // Prepare the expression
                 String expression = firstNumber + " ^ " + exponent + " = " + resultString;
-
-                // Add to history
                 addToHistory(expression, resultString);
 
-                // Reset state
                 waitingForExponent = false;
                 operator = "";
                 numberHandler.setNewCalculation(true);
@@ -303,13 +355,13 @@ public class CalculatorController {
     @FXML
     public void handleMemoryRecall() {
         double memoryValue = memoryRecall.getMemory();
-        display.setText(formatAsIntegerOrDouble(memoryValue));
+        display.setText(formatAsIntegerOrDouble.apply(memoryValue));
     }
 
     @FXML
     public void handleMemoryClear() {
         memoryClear.handleMemoryOperation(0);
-        display.setText(formatAsIntegerOrDouble(0));
+        display.setText(formatAsIntegerOrDouble.apply(0.0));
     }
 
     @FXML
@@ -317,17 +369,18 @@ public class CalculatorController {
         try {
             double currentValue = Double.parseDouble(display.getText());
             memoryAdd.handleMemoryOperation(currentValue);
-            display.setText(formatAsIntegerOrDouble(currentValue));
+            display.setText(formatAsIntegerOrDouble.apply(currentValue));
         } catch (NumberFormatException e) {
             display.setText("Error");
         }
     }
+
     @FXML
     public void handleMemorySubtract() {
         try {
             double currentValue = Double.parseDouble(display.getText());
             memorySubtract.handleMemoryOperation(currentValue);
-            display.setText(formatAsIntegerOrDouble(currentValue));
+            display.setText(formatAsIntegerOrDouble.apply(currentValue));
         } catch (NumberFormatException e) {
             display.setText("Error");
         }
