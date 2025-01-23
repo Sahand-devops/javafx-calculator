@@ -27,7 +27,7 @@ public class DBConnector {
 
     /** Användarnamn för databasen. */
     private static final String USER = "root";
-    private static final String PASSWORD = "p";
+    private static final String PASSWORD = "";
 
     /**
      * Skapar en anslutning till databasen.

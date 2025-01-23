@@ -27,6 +27,10 @@ public class CalculatorController {
     private final MemoryControl memoryAdd = new MemoryControl.MemoryAdd();
     private final MemoryControl memorySubtract = new MemoryControl.MemorySubtract();
 
+    // lambda
+    public final java.util.function.Function<Double, String> formatAsIntegerOrDouble =
+            number -> (number.doubleValue() == number.longValue()) ? String.valueOf(number.longValue()) : String.valueOf(number);
+
     private void calculate() {
         String displayText = display.getText();
         double secondNumber;
@@ -34,7 +38,7 @@ public class CalculatorController {
         try {
             secondNumber = Double.parseDouble(displayText.substring(displayText.lastIndexOf(" ") + 1));
         } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-            display.setText(formatAsIntegerOrDouble(firstNumber));
+            display.setText(formatAsIntegerOrDouble.apply(firstNumber));
             resetState();
             return;
         }
@@ -62,7 +66,7 @@ public class CalculatorController {
                 break;
             case "%":
                 result = (firstNumber / secondNumber) * 100;
-                display.setText(formatAsIntegerOrDouble(result) + " % ");
+                display.setText(formatAsIntegerOrDouble.apply(result) + " % ");
                 break;
             case "^":
                 result = Math.pow(firstNumber, secondNumber);
@@ -73,7 +77,7 @@ public class CalculatorController {
         }
 
         if (validOperation && !operator.equals("%")) {
-            String resultString = formatAsIntegerOrDouble(result);
+            String resultString = formatAsIntegerOrDouble.apply(result);
             display.setText(resultString);
 
             firstNumber = result;
@@ -109,10 +113,6 @@ public class CalculatorController {
         String filePath = "history.json";
         DBConnector.exportHistoryToJSON(filePath);
         System.out.println("History exported to JSON: " + filePath);
-    }
-
-    public String formatAsIntegerOrDouble(double number) {
-        return (number == (long) number) ? String.valueOf((long) number) : String.valueOf(number);
     }
 
     @FXML
@@ -153,7 +153,6 @@ public class CalculatorController {
                 if (displayText.matches(".*[\\+\\-\\*/]$")) {
                     displayText = displayText.substring(0, displayText.length() - 1); // Remove the last operator
                 }
-                // Remove any trailing spaces and then apply sqrt
                 displayText = displayText.trim();
                 display.setText("sqrt(" + displayText + ")");
             }
@@ -182,16 +181,12 @@ public class CalculatorController {
     public void handleEqualsClick() {
         String displayText = display.getText();
 
-        // If the operator is "sqrt", remove "sqrt(" and ")" if the user changes the operator
         if (operator.equals("sqrt")) {
-            // Check if the user has changed the operator
             if (!displayText.startsWith("sqrt(")) {
-                // User changed the operator, remove "sqrt()" from the display
                 displayText = displayText.substring(5, displayText.length() - 1); // Remove "sqrt(" and ")"
             }
 
             if (displayText.startsWith("sqrt(")) {
-                // Calculate square root
                 displayText = displayText.substring(5, displayText.length() - 1); // Remove "sqrt(" and ")"
                 SqrtHandler sqrtHandler = new SqrtHandler();
                 String result = sqrtHandler.calculateSquareRoot(displayText);
@@ -203,22 +198,21 @@ public class CalculatorController {
                     display.setText(result); // Show error message
                 }
 
-                operator = ""; // Reset operator
-                numberHandler.setNewCalculation(true); // Start a new calculation
+                operator = "";
+                numberHandler.setNewCalculation(true);
                 return;
             }
         }
 
-        // Handle other operators (like +, -, etc.)
         if (operator.isEmpty()) {
-            display.setText(formatAsIntegerOrDouble(firstNumber));
+            display.setText(formatAsIntegerOrDouble.apply(firstNumber));
             return;
         }
 
         boolean hasSecondNumber = displayText.trim().endsWith(operator);
 
         if (hasSecondNumber) {
-            display.setText(formatAsIntegerOrDouble(firstNumber));
+            display.setText(formatAsIntegerOrDouble.apply(firstNumber));
             operator = "";
             numberHandler.setNewCalculation(true);
             return;
@@ -227,7 +221,7 @@ public class CalculatorController {
         try {
             calculate();
         } catch (NumberFormatException e) {
-            display.setText(formatAsIntegerOrDouble(firstNumber));
+            display.setText(formatAsIntegerOrDouble.apply(firstNumber));
         } finally {
             operator = "";
         }
@@ -267,7 +261,7 @@ public class CalculatorController {
 
         try {
             double number = Double.parseDouble(displayText);
-            display.setText("sqrt(" + formatAsIntegerOrDouble(number) + ")");
+            display.setText("sqrt(" + formatAsIntegerOrDouble.apply(number) + ")");
             operator = "sqrt";
         } catch (NumberFormatException e) {
             display.setText("Invalid Input");
@@ -287,18 +281,13 @@ public class CalculatorController {
                 String displayText = display.getText();
                 double exponent = Double.parseDouble(displayText.substring(displayText.lastIndexOf("^") + 2));
                 double result = Math.pow(firstNumber, exponent);
-                String resultString = formatAsIntegerOrDouble(result);
+                String resultString = formatAsIntegerOrDouble.apply(result);
 
-                // Display result
                 display.setText(resultString);
 
-                // Prepare the expression
                 String expression = firstNumber + " ^ " + exponent + " = " + resultString;
-
-                // Add to history
                 addToHistory(expression, resultString);
 
-                // Reset state
                 waitingForExponent = false;
                 operator = "";
                 numberHandler.setNewCalculation(true);
@@ -317,13 +306,13 @@ public class CalculatorController {
     @FXML
     public void handleMemoryRecall() {
         double memoryValue = memoryRecall.getMemory();
-        display.setText(formatAsIntegerOrDouble(memoryValue));
+        display.setText(formatAsIntegerOrDouble.apply(memoryValue));
     }
 
     @FXML
     public void handleMemoryClear() {
         memoryClear.handleMemoryOperation(0);
-        display.setText(formatAsIntegerOrDouble(0));
+        display.setText(formatAsIntegerOrDouble.apply(0.0));
     }
 
     @FXML
@@ -331,17 +320,18 @@ public class CalculatorController {
         try {
             double currentValue = Double.parseDouble(display.getText());
             memoryAdd.handleMemoryOperation(currentValue);
-            display.setText(formatAsIntegerOrDouble(currentValue));
+            display.setText(formatAsIntegerOrDouble.apply(currentValue));
         } catch (NumberFormatException e) {
             display.setText("Error");
         }
     }
+
     @FXML
     public void handleMemorySubtract() {
         try {
             double currentValue = Double.parseDouble(display.getText());
             memorySubtract.handleMemoryOperation(currentValue);
-            display.setText(formatAsIntegerOrDouble(currentValue));
+            display.setText(formatAsIntegerOrDouble.apply(currentValue));
         } catch (NumberFormatException e) {
             display.setText("Error");
         }
