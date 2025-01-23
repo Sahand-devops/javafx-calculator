@@ -250,7 +250,7 @@ public class CalculatorController {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.print("Error occurred when trying to creating ");
         }
     }
 
@@ -258,7 +258,7 @@ public class CalculatorController {
     public void handleSquareRootClick() {
         String displayText = display.getText().trim();
 
-        if (displayText.matches(".*[+\\-\\*/]$")) {
+        if (displayText.matches(".*[+\\-*/]$")) {
             displayText = displayText.substring(0, displayText.length() - 1).trim();
         }
 

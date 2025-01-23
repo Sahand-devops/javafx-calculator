@@ -8,10 +8,10 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.friends.HistoryController" spacing="10" alignment="CENTER" prefWidth="600" prefHeight="400" style="-fx-padding: 20;">
-    <!-- Title -->
+
     <Label text="Calculation History (JSON)" style="-fx-font-size: 18; -fx-font-weight: bold;" />
 
-    <!-- TableView -->
+
     <TableView fx:id="historyTable" prefWidth="600" prefHeight="400">
         <columns>
             <TableColumn text="ID" fx:id="idColumn" prefWidth="50" />
@@ -21,7 +21,7 @@
         </columns>
     </TableView>
 
-    <!-- Buttons -->
+
     <HBox spacing="10" alignment="CENTER">
         <Button text="Delete" onAction="#handleDelete" />
         <Button text="Delete All" onAction="#handleDeleteAll" />
