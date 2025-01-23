@@ -32,7 +32,6 @@ public class CalculatorController {
         double secondNumber;
 
         try {
-            // Parse the second number from the display text
             secondNumber = Double.parseDouble(displayText.substring(displayText.lastIndexOf(" ") + 1));
         } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
             display.setText(formatAsIntegerOrDouble(firstNumber));
@@ -43,7 +42,6 @@ public class CalculatorController {
         double result = 0;
         boolean validOperation = true;
 
-        // Perform the operation
         switch (operator) {
             case "+":
                 result = firstNumber + secondNumber;
@@ -74,7 +72,6 @@ public class CalculatorController {
                 break;
         }
 
-        // Display result if valid operation
         if (validOperation && !operator.equals("%")) {
             String resultString = formatAsIntegerOrDouble(result);
             display.setText(resultString);
@@ -82,14 +79,13 @@ public class CalculatorController {
             firstNumber = result;
             numberHandler.setNewCalculation(true);
 
-            // Add the operation to history
+            // Add to database and XML
             String expression = displayText + " = " + resultString;
             addToHistory(expression, resultString);
         }
 
         resetState();
     }
-
 
     private void addToHistory(String expression, String result) {
         try {
@@ -150,76 +146,94 @@ public class CalculatorController {
         String newOperator = ((javafx.scene.control.Button) event.getSource()).getText();
         String displayText = display.getText();
 
-        // If the display contains "π", set Pi as firstNumber
-        if (displayText.equals("π") || displayText.equals(String.format("%.2f", PiCalculator.getPi()))) {
-            firstNumber = PiCalculator.getPi();  // Store Pi as the first number
-            operator = newOperator;
-            display.setText(String.format("%.2f", firstNumber) + " " + operator + " ");  // Update display with Pi and operator
+        if (newOperator.equals("sqrt")) {
+            operator = "sqrt";
+            if (!displayText.startsWith("sqrt")) {
+                // Remove any operator at the end before adding sqrt
+                if (displayText.matches(".*[\\+\\-\\*/]$")) {
+                    displayText = displayText.substring(0, displayText.length() - 1); // Remove the last operator
+                }
+                // Remove any trailing spaces and then apply sqrt
+                displayText = displayText.trim();
+                display.setText("sqrt(" + displayText + ")");
+            }
+            firstNumber = Double.parseDouble(displayText.replace("sqrt(", "").replace(")", "").trim());
         } else {
-            // Regular operator handling: If operator is already set, update it
+            if (displayText.startsWith("sqrt(")) {
+                display.setText(displayText.substring(5, displayText.length() - 1));
+            }
+
             if (!operator.isEmpty() && displayText.contains(" " + operator + " ")) {
                 display.setText(displayText.substring(0, displayText.lastIndexOf(" " + operator + " ")) + " " + newOperator + " ");
                 operator = newOperator;
                 return;
             }
 
-            // For new operations
-            firstNumber = Double.parseDouble(displayText);  // Store the first number
-            operator = newOperator;  // Set the operator
-            display.setText(displayText + " " + operator + " ");  // Update display with the operator
+            firstNumber = Double.parseDouble(display.getText());
+            operator = newOperator;
+            numberHandler.setNewCalculation(false);
+            numberHandler.setAfterOperator(true);
+
+            display.setText(display.getText() + " " + operator + " ");
         }
     }
-
-
 
     @FXML
     public void handleEqualsClick() {
         String displayText = display.getText();
 
-        // If the operator is empty, just return the first number
+        // If the operator is "sqrt", remove "sqrt(" and ")" if the user changes the operator
+        if (operator.equals("sqrt")) {
+            // Check if the user has changed the operator
+            if (!displayText.startsWith("sqrt(")) {
+                // User changed the operator, remove "sqrt()" from the display
+                displayText = displayText.substring(5, displayText.length() - 1); // Remove "sqrt(" and ")"
+            }
+
+            if (displayText.startsWith("sqrt(")) {
+                // Calculate square root
+                displayText = displayText.substring(5, displayText.length() - 1); // Remove "sqrt(" and ")"
+                SqrtHandler sqrtHandler = new SqrtHandler();
+                String result = sqrtHandler.calculateSquareRoot(displayText);
+
+                if (!result.equals("Invalid input") && !result.equals("Cannot take square root of negative number")) {
+                    sqrtHandler.saveToHistory("sqrt(" + displayText + ")", result); // Save to history
+                    display.setText(result); // Show result
+                } else {
+                    display.setText(result); // Show error message
+                }
+
+                operator = ""; // Reset operator
+                numberHandler.setNewCalculation(true); // Start a new calculation
+                return;
+            }
+        }
+
+        // Handle other operators (like +, -, etc.)
         if (operator.isEmpty()) {
             display.setText(formatAsIntegerOrDouble(firstNumber));
             return;
         }
 
-        // Parse the second number after the operator (it's the number you want to operate with)
-        double secondNumber = Double.parseDouble(displayText.substring(displayText.lastIndexOf(" ") + 1));
-        double result = 0;
+        boolean hasSecondNumber = displayText.trim().endsWith(operator);
 
-        // Perform operation based on the operator
-        switch (operator) {
-            case "+":
-                result = PiCalculator.add(firstNumber, secondNumber);
-                break;
-            case "-":
-                result = PiCalculator.subtract(firstNumber, secondNumber);
-                break;
-            case "*":
-                result = PiCalculator.multiply(firstNumber, secondNumber);
-                break;
-            case "/":
-                if (secondNumber != 0) {
-                    result = PiCalculator.divide(firstNumber, secondNumber);
-                } else {
-                    display.setText("Cannot divide by zero");
-                    return;
-                }
-                break;
-            default:
-                display.setText("Invalid operation");
-                return;
+        if (hasSecondNumber) {
+            display.setText(formatAsIntegerOrDouble(firstNumber));
+            operator = "";
+            numberHandler.setNewCalculation(true);
+            return;
         }
 
-        // Display the result
-        String resultString = formatAsIntegerOrDouble(result);
-        display.setText(resultString);
-        firstNumber = result;  // Store the result for future calculations
+        try {
+            calculate();
+        } catch (NumberFormatException e) {
+            display.setText(formatAsIntegerOrDouble(firstNumber));
+        } finally {
+            operator = "";
+        }
 
-        // Add to history (if necessary)
-        addToHistory(displayText + " = " + resultString, resultString);
+        exportHistoryToJSON();
     }
-
-
 
     @FXML
     public void handleClearClick() {
@@ -331,26 +345,5 @@ public class CalculatorController {
         } catch (NumberFormatException e) {
             display.setText("Error");
         }
-    }
-
-    @FXML
-    public void handlePiClick() {
-        // Get the numerical value of Pi
-        double piValue = PiCalculator.getPi();
-
-        // Display the numeric value of Pi with 2 decimal places (adjustable as needed)
-        display.setText(String.format("%.2f", piValue));
-
-        // Store the numeric value of Pi for future calculations
-        firstNumber = piValue;
-
-        // Set the operator to an empty string (to allow operations like +, -, etc.)
-        operator = "";  // This is crucial to allow further operations
-
-        // Indicate a new calculation is starting after Pi
-        numberHandler.setNewCalculation(false);
-
-        // Allow the user to add/subtract/multiply/divide Pi with other numbers
-        numberHandler.setAfterOperator(false);
     }
 }
