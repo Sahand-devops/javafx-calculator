@@ -4,32 +4,32 @@ public class SqrtHandler {
 
     public String calculateSquareRoot(String input) {
         try {
-            double number = Double.parseDouble(input); // Parse the input string to a number
+            // Försök att tolka input som ett tal
+            double number = Double.parseDouble(input);
             if (number < 0) {
-                return "Int cant be negative"; // Handle negative numbers
+                return "Cannot take square root of negative number";
             }
+
+            // Beräkna kvadratroten
             double result = Math.sqrt(number);
-            String formattedResult = formatAsIntegerOrDouble(result); // Format the result
-
-            // Save the calculation to the database
-            String expression = "sqrt(" + input + ")";
-            DBConnector.insertHistory(expression, formattedResult);
-
-            // Export the updated history to the JSON file
-            String filePath = "history.json"; // Update the path if needed
-            DBConnector.exportHistoryToJSON(filePath);
-
-            return formattedResult; // Return the result to be displayed
+            return formatAsIntegerOrDouble(result);
         } catch (NumberFormatException e) {
-            return "Please input int"; // Handle invalid input
+            return "Invalid input"; // Hantera ogiltig inmatning
         }
     }
 
-    private String formatAsIntegerOrDouble(double number) {
+    public void saveToHistory(String expression, String result) {
+        // Spara historik i databasen
+        DBConnector.insertHistory(expression, result);
+        DBConnector.exportHistoryToJSON("history.json");  // Uppdatera JSON-fil efter varje sparande
+
+    }
+
+    public String formatAsIntegerOrDouble(double number) {
         if (number == (long) number) {
-            return String.valueOf((long) number); // Convert to integer if no decimal
+            return String.valueOf((long) number); // Om inget decimaltal, konvertera till heltal
         } else {
-            return String.valueOf(number); // Return as double
+            return String.valueOf(number); // Annars behåll som double
         }
     }
 }

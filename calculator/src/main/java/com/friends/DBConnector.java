@@ -12,7 +12,7 @@ public class DBConnector {
 
     private static final String URL = "jdbc:mariadb://localhost:3306/Calculator";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "p";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -79,8 +79,8 @@ public class DBConnector {
         }
     }
 
-    public static String getJsonFilePath() {
-        return Paths.get("src/main/resources/history.json").toAbsolutePath().toString();
+    public static String getJsonFilePath(String s) {
+        return Paths.get("calculator/src/main/resources/history.json").toAbsolutePath().toString();
     }
 
     public static void deleteHistoryEntry(int id) {
@@ -110,6 +110,6 @@ public class DBConnector {
 
     public static void main(String[] args) {
         createHistoryTable();
-        exportHistoryToJSON(getJsonFilePath());
+        exportHistoryToJSON(getJsonFilePath("calculator/src/main/resources/history.json"));
     }
 }
