@@ -1,8 +1,13 @@
 package com.friends;
 
-import com.friends.operators.ArithmeticOperator;
+
+import com.friends.controllers.MemoryControl;
+import com.friends.handlers.ClearHandler;
+import com.friends.handlers.EditHandler;
+import com.friends.handlers.NumberHandler;
 import com.friends.operators.ExponentiationOperator;
-import com.friends.operators.SquareRootOperator;
+import com.friends.handlers.FactorialHandler;
+import com.friends.operators.SqrtOperator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,11 +21,12 @@ public class CalculatorController {
 
     public double firstNumber = 0;
     public String operator = "";
-    public final NumberHandler numberHandler = new NumberHandler(true);
-    public final EditHandler editHandler = new EditHandler();
     public Double base = null;
     public boolean waitingForExponent = false;
-    public final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
+
+    public final NumberHandler numberHandler = new NumberHandler(true);
+    public final EditHandler editHandler = new EditHandler();
+    public final ExponentiationOperator exponentiationOperator = new ExponentiationOperator();
     private final ClearHandler clearHandler = new ClearHandler();
     private final MemoryControl memoryRecall = new MemoryControl.MemoryRecall();
     private final MemoryControl memoryClear = new MemoryControl.MemoryClear();
@@ -79,7 +85,6 @@ public class CalculatorController {
             firstNumber = result;
             numberHandler.setNewCalculation(true);
 
-            // Add to database and XML
             String expression = displayText + " = " + resultString;
             addToHistory(expression, resultString);
         }
@@ -89,10 +94,8 @@ public class CalculatorController {
 
     private void addToHistory(String expression, String result) {
         try {
-            // Add to database
             DBConnector.insertHistory(expression, result);
 
-            // Append to XML
             String xmlFilePath = "history.xml";
             DBConnector.appendToXML(xmlFilePath, expression, result);
         } catch (Exception e) {
@@ -122,7 +125,7 @@ public class CalculatorController {
         if (waitingForExponent && base != null) {
             try {
                 double exponent = Double.parseDouble(number);
-                double result = exponentiationHandler.calculateExponentiation(base, exponent);
+                double result = exponentiationOperator.calculateExponentiation(base, exponent);
                 display.setText(String.valueOf(result));
                 base = null;
                 waitingForExponent = false;
@@ -149,11 +152,9 @@ public class CalculatorController {
         if (newOperator.equals("sqrt")) {
             operator = "sqrt";
             if (!displayText.startsWith("sqrt")) {
-                // Remove any operator at the end before adding sqrt
                 if (displayText.matches(".*[\\+\\-\\*/]$")) {
-                    displayText = displayText.substring(0, displayText.length() - 1); // Remove the last operator
+                    displayText = displayText.substring(0, displayText.length() - 1);
                 }
-                // Remove any trailing spaces and then apply sqrt
                 displayText = displayText.trim();
                 display.setText("sqrt(" + displayText + ")");
             }
@@ -182,34 +183,30 @@ public class CalculatorController {
     public void handleEqualsClick() {
         String displayText = display.getText();
 
-        // If the operator is "sqrt", remove "sqrt(" and ")" if the user changes the operator
         if (operator.equals("sqrt")) {
-            // Check if the user has changed the operator
+
             if (!displayText.startsWith("sqrt(")) {
-                // User changed the operator, remove "sqrt()" from the display
-                displayText = displayText.substring(5, displayText.length() - 1); // Remove "sqrt(" and ")"
+                displayText = displayText.substring(5, displayText.length() - 1);
             }
 
             if (displayText.startsWith("sqrt(")) {
-                // Calculate square root
-                displayText = displayText.substring(5, displayText.length() - 1); // Remove "sqrt(" and ")"
-                SqrtHandler sqrtHandler = new SqrtHandler();
-                String result = sqrtHandler.calculateSquareRoot(displayText);
+                displayText = displayText.substring(5, displayText.length() - 1);
+                SqrtOperator sqrtOperator = new SqrtOperator();
+                String result = sqrtOperator.calculateSquareRoot(displayText);
 
                 if (!result.equals("Invalid input") && !result.equals("Cannot take square root of negative number")) {
-                    sqrtHandler.saveToHistory("sqrt(" + displayText + ")", result); // Save to history
-                    display.setText(result); // Show result
+                    sqrtOperator.saveToHistory("sqrt(" + displayText + ")", result);
+                    display.setText(result);
                 } else {
-                    display.setText(result); // Show error message
+                    display.setText(result);
                 }
 
-                operator = ""; // Reset operator
-                numberHandler.setNewCalculation(true); // Start a new calculation
+                operator = "";
+                numberHandler.setNewCalculation(true);
                 return;
             }
         }
 
-        // Handle other operators (like +, -, etc.)
         if (operator.isEmpty()) {
             display.setText(formatAsIntegerOrDouble(firstNumber));
             return;
@@ -286,16 +283,12 @@ public class CalculatorController {
                 double result = Math.pow(firstNumber, exponent);
                 String resultString = formatAsIntegerOrDouble(result);
 
-                // Display result
                 display.setText(resultString);
 
-                // Prepare the expression
                 String expression = firstNumber + " ^ " + exponent + " = " + resultString;
 
-                // Add to history
                 addToHistory(expression, resultString);
 
-                // Reset state
                 waitingForExponent = false;
                 operator = "";
                 numberHandler.setNewCalculation(true);

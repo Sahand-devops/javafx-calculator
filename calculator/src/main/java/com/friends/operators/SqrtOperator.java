@@ -1,6 +1,8 @@
-package com.friends;
+package com.friends.operators;
 
-public class SqrtHandler {
+import com.friends.DBConnector;
+
+public class SqrtOperator {
 
     public String calculateSquareRoot(String input) {
         try {

@@ -1,4 +1,4 @@
-package com.friends;
+package com.friends.controllers;
 /**
  * Abstrakt basklass för att hantera minnesoperationer (M) på kalkylatorn.
  * Denna klass tillhandahåller ett delat statiskt minne för alla instanser och deklarerar metoder för att hantera minnesrelaterade operationer.
