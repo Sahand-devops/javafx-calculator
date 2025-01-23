@@ -15,8 +15,8 @@ public class CalculatorController {
     public String operator = "";
     public final NumberHandler numberHandler = new NumberHandler(true);
     public final EditHandler editHandler = new EditHandler();
-    public Double base = null; // För att lagra basen
-    public boolean waitingForExponent = false; // Indikerar att användaren ska mata in exponent
+    public Double base = null;
+    public boolean waitingForExponent = false;
     public final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
 
     private final MemoryControl memoryRecall = new MemoryControl.MemoryRecall();
@@ -78,13 +78,26 @@ public class CalculatorController {
             firstNumber = result;
             numberHandler.setNewCalculation(true);
 
-            String expression = displayText;
-            DBConnector.insertHistory(expression, resultString);
+            // Add to database and XML
+            String expression = displayText + " = " + resultString;
+            addToHistory(expression, resultString);
         }
 
         resetState();
     }
 
+    private void addToHistory(String expression, String result) {
+        try {
+            // Add to database
+            DBConnector.insertHistory(expression, result);
+
+            // Append to XML
+            String xmlFilePath = "history.xml";
+            DBConnector.appendToXML(xmlFilePath, expression, result);
+        } catch (Exception e) {
+            System.err.println("Error adding to history: " + e.getMessage());
+        }
+    }
 
     private void resetState() {
         waitingForExponent = false;
@@ -276,6 +289,25 @@ public class CalculatorController {
                 operator = "^";
                 waitingForExponent = true;
                 numberHandler.setNewCalculation(false);
+            } else {
+                String displayText = display.getText();
+                double exponent = Double.parseDouble(displayText.substring(displayText.lastIndexOf("^") + 2));
+                double result = Math.pow(firstNumber, exponent);
+                String resultString = formatAsIntegerOrDouble(result);
+
+                // Display result
+                display.setText(resultString);
+
+                // Prepare the expression
+                String expression = firstNumber + " ^ " + exponent + " = " + resultString;
+
+                // Add to history
+                addToHistory(expression, resultString);
+
+                // Reset state
+                waitingForExponent = false;
+                operator = "";
+                numberHandler.setNewCalculation(true);
             }
         } catch (NumberFormatException e) {
             display.setText("Invalid Input");
