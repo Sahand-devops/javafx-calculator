@@ -38,19 +38,18 @@ public class XMLHistoryController {
 
     @FXML
     public void initialize() {
-        // Set up the table columns
+
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         expressionColumn.setCellValueFactory(new PropertyValueFactory<>("expression"));
         resultColumn.setCellValueFactory(new PropertyValueFactory<>("result"));
         timestampColumn.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
 
-        // Load the data from the XML file
         loadHistoryFromXML();
         historyTable.setItems(historyData);
     }
 
     private void loadHistoryFromXML() {
-        String filePath = "history.xml"; // Adjust path if necessary
+        String filePath = "history.xml";
         try {
             File file = new File(filePath);
             if (!file.exists()) return;
@@ -73,13 +72,13 @@ public class XMLHistoryController {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error");
         }
     }
 
     @FXML
     private void handleClose() {
-        // Close the current stage
+
         Stage stage = (Stage) historyTable.getScene().getWindow();
         stage.close();
     }
@@ -90,7 +89,7 @@ public class XMLHistoryController {
         if (selectedEntry != null) {
             historyData.remove(selectedEntry);
 
-            // Update XML file
+
             DBConnector.exportHistoryToXML("history.xml");
 
             showAlert("Success", "The selected entry has been deleted.");
@@ -109,7 +108,7 @@ public class XMLHistoryController {
         confirmationAlert.showAndWait().ifPresent(response -> {
             historyData.clear();
 
-            // Regenerate an empty XML file
+
             DBConnector.exportHistoryToXML("history.xml");
 
             showAlert("Success", "All entries have been deleted.");

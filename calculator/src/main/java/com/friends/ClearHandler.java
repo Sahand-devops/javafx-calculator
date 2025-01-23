@@ -1,18 +1,16 @@
 package com.friends;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class ClearHandler {
 
-    @FXML
-    private TextField display;
-
-    @FXML
-    private void handleClear(ActionEvent event) {
-        display.clear();  // Rensa displayen
+    public void handleClear(TextField display, CalculatorController controller) {
+        display.setText("");
+        controller.firstNumber = 0;
+        controller.operator = "";
+        controller.numberHandler.setNewCalculation(true);
+        controller.waitingForExponent = false;
+        controller.base = null;
     }
 }
 

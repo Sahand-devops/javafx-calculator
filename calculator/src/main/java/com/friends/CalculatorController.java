@@ -21,7 +21,7 @@ public class CalculatorController {
     public Double base = null;
     public boolean waitingForExponent = false;
     public final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
-
+    private final ClearHandler clearHandler = new ClearHandler();
     private final MemoryControl memoryRecall = new MemoryControl.MemoryRecall();
     private final MemoryControl memoryClear = new MemoryControl.MemoryClear();
     private final MemoryControl memoryAdd = new MemoryControl.MemoryAdd();
@@ -237,10 +237,7 @@ public class CalculatorController {
 
     @FXML
     public void handleClearClick() {
-        display.setText("");
-        firstNumber = 0;
-        operator = "";
-        numberHandler.setNewCalculation(true);
+        clearHandler.handleClear(display, this);
     }
 
     @FXML
@@ -261,7 +258,7 @@ public class CalculatorController {
     public void handleSquareRootClick() {
         String displayText = display.getText().trim();
 
-        if (displayText.matches(".*[\\+\\-\\*/]$")) {
+        if (displayText.matches(".*[+\\-\\*/]$")) {
             displayText = displayText.substring(0, displayText.length() - 1).trim();
         }
 

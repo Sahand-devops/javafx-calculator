@@ -37,19 +37,17 @@ public class HistoryController {
 
     @FXML
     public void initialize() {
-        // Set up the table columns
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         expressionColumn.setCellValueFactory(new PropertyValueFactory<>("expression"));
         resultColumn.setCellValueFactory(new PropertyValueFactory<>("result"));
         timestampColumn.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
 
-        // Load the data from the JSON file
         loadHistoryFromJSON();
         historyTable.setItems(historyData);
     }
 
     private void loadHistoryFromJSON() {
-        String filePath = "history.json"; // Adjust path if necessary
+        String filePath = "history.json";
         System.out.println("Loading history from: " + filePath);
 
         try (FileReader reader = new FileReader(filePath)) {
@@ -72,29 +70,25 @@ public class HistoryController {
             }
         } catch (Exception e) {
             System.err.println("Error loading JSON: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
     @FXML
     private void handleClose() {
-        // Close the current stage
         Stage stage = (Stage) historyTable.getScene().getWindow();
         stage.close();
     }
 
     @FXML
     private void handleDelete() {
-        // Get the selected row
+
         HistoryEntry selectedEntry = historyTable.getSelectionModel().getSelectedItem();
         if (selectedEntry != null) {
-            // Remove the selected entry from the TableView
+
             historyData.remove(selectedEntry);
 
-            // Remove the entry from the database
             DBConnector.deleteHistoryEntry(selectedEntry.getId());
 
-            // Regenerate the JSON file
             DBConnector.exportHistoryToJSON("history.json");
 
             showAlert("Success", "The selected entry has been deleted.");
@@ -105,20 +99,17 @@ public class HistoryController {
 
     @FXML
     private void handleDeleteAll() {
-        // Show confirmation alert before clearing everything
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Delete All");
         confirmationAlert.setHeaderText("Are you sure?");
         confirmationAlert.setContentText("This will delete all entries from the database and JSON file.");
 
         confirmationAlert.showAndWait().ifPresent(response -> {
-            // Clear all entries from the database
+
             DBConnector.clearHistory();
 
-            // Clear the TableView
             historyData.clear();
 
-            // Regenerate an empty JSON file
             DBConnector.exportHistoryToJSON("history.json");
 
             showAlert("Success", "All entries have been deleted.");
@@ -135,11 +126,10 @@ public class HistoryController {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Something went wrong");
         }
     }
 
-    // Helper method to show alert dialog
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -148,7 +138,7 @@ public class HistoryController {
         alert.showAndWait();
     }
 
-    // Nested HistoryEntry class
+
     public static class HistoryEntry {
         private final int id;
         private final String expression;
