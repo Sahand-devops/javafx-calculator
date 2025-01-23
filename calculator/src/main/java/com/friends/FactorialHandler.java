@@ -1,5 +1,6 @@
 package com.friends;
 
+import com.friends.operators.FactorialOperator;
 import javafx.scene.control.TextField;
 
 public class FactorialHandler {
@@ -13,16 +14,9 @@ public class FactorialHandler {
         String currentText = display.getText();
         try {
             int number = Integer.parseInt(currentText); // Parse the input
-            if (number < 0) {
-                display.setText("Invalid Input");
-                return; // Handle negative inputs
-            }
 
-            // Calculate factorial
-            long result = 1;
-            for (int i = 1; i <= number; i++) {
-                result *= i;
-            }
+            // Calculate factorial using the new FactorialOperator class
+            long result = FactorialOperator.calculate(number);
 
             // Update display with the result
             display.setText(Long.toString(result));
@@ -41,6 +35,8 @@ public class FactorialHandler {
             appendToXML(expression, resultString);
 
         } catch (NumberFormatException e) {
+            display.setText("Invalid Input");
+        } catch (IllegalArgumentException e) {
             display.setText("Invalid Input");
         }
     }

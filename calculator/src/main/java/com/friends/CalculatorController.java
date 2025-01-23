@@ -1,5 +1,8 @@
 package com.friends;
 
+import com.friends.operators.ArithmeticOperator;
+import com.friends.operators.ExponentiationOperator;
+import com.friends.operators.SquareRootOperator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,8 +26,6 @@ public class CalculatorController {
     private final MemoryControl memoryClear = new MemoryControl.MemoryClear();
     private final MemoryControl memoryAdd = new MemoryControl.MemoryAdd();
     private final MemoryControl memorySubtract = new MemoryControl.MemorySubtract();
-
-
 
     private void calculate() {
         String displayText = display.getText();
@@ -145,10 +146,8 @@ public class CalculatorController {
         String newOperator = ((javafx.scene.control.Button) event.getSource()).getText();
         String displayText = display.getText();
 
-        // Check if the operator is 'sqrt'
         if (newOperator.equals("sqrt")) {
             operator = "sqrt";
-            // Only add sqrt if it isn't already present
             if (!displayText.startsWith("sqrt")) {
                 // Remove any operator at the end before adding sqrt
                 if (displayText.matches(".*[\\+\\-\\*/]$")) {
@@ -158,15 +157,13 @@ public class CalculatorController {
                 displayText = displayText.trim();
                 display.setText("sqrt(" + displayText + ")");
             }
+            firstNumber = Double.parseDouble(displayText.replace("sqrt(", "").replace(")", "").trim());
         } else {
-            // Handle case where the operator is being changed from 'sqrt'
             if (displayText.startsWith("sqrt(")) {
-                // Remove the 'sqrt(' part and the closing parenthesis
-                display.setText(displayText.substring(5, displayText.length() - 1)); // Remove "sqrt(" and ")"
+                display.setText(displayText.substring(5, displayText.length() - 1));
             }
 
             if (!operator.isEmpty() && displayText.contains(" " + operator + " ")) {
-                // Replace the operator if it's already present in the expression
                 display.setText(displayText.substring(0, displayText.lastIndexOf(" " + operator + " ")) + " " + newOperator + " ");
                 operator = newOperator;
                 return;
@@ -180,7 +177,6 @@ public class CalculatorController {
             display.setText(display.getText() + " " + operator + " ");
         }
     }
-
 
     @FXML
     public void handleEqualsClick() {
@@ -239,7 +235,6 @@ public class CalculatorController {
         exportHistoryToJSON();
     }
 
-
     @FXML
     public void handleClearClick() {
         display.setText("");
@@ -283,7 +278,6 @@ public class CalculatorController {
     public void handleExponentiation() {
         try {
             if (!waitingForExponent) {
-                // Store the base for exponentiation
                 firstNumber = Double.parseDouble(display.getText());
                 display.setText(display.getText() + " ^ ");
                 operator = "^";
