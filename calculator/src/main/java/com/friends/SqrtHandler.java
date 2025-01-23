@@ -22,7 +22,7 @@ public class SqrtHandler {
         // Spara historik i databasen
         DBConnector.insertHistory(expression, result);
         DBConnector.exportHistoryToJSON("history.json");  // Uppdatera JSON-fil efter varje sparande
-
+        DBConnector.exportHistoryToXML("history.xml");
     }
 
     public String formatAsIntegerOrDouble(double number) {

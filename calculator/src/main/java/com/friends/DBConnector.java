@@ -27,9 +27,6 @@ public class DBConnector {
 
     /** Användarnamn för databasen. */
     private static final String USER = "root";
-    private static final String PASSWORD = "";
-
-    /** Lösenord för databasen. */
     private static final String PASSWORD = "p";
 
     /**
@@ -62,30 +59,6 @@ public class DBConnector {
         }
     }
 
-    public static void deleteHistoryEntry(int id) {
-        String deleteSQL = "DELETE FROM history WHERE id = ?";
-
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(deleteSQL)) {
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
-            System.out.println("Entry with ID " + id + " deleted from the database.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void clearHistory() {
-        String clearSQL = "DELETE FROM history";
-
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(clearSQL)) {
-            pstmt.executeUpdate();
-            System.out.println("All entries deleted from the database.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Infogar ny historikdata i databasen.
@@ -239,23 +212,13 @@ public class DBConnector {
         }
     }
 
-    /**
-     * Hämtar den fullständiga filvägen för historik JSON-filen.
-     *
-     * @param s Relativ filväg.
-     * @return Absolut filväg som en sträng.
-     */
     public static String getJsonFilePath(String s) {
         return Paths.get(s).toAbsolutePath().toString();
     }
 
     public static String getXmlFilePath(String s) {
-        return Paths.get("calculator/src/main/resources/history.xml").toAbsolutePath().toString();
-    /**
-     * Raderar data från databasen baserat på dess ID.
-     *
-     * @param id ID för datan som ska raderas.
-     */
+        return Paths.get(s).toAbsolutePath().toString();}
+
     public static void deleteHistoryEntry(int id) {
         String deleteSQL = "DELETE FROM history WHERE id = ?";
 
@@ -269,9 +232,7 @@ public class DBConnector {
         }
     }
 
-    /**
-     * Rensar all historik från databasen.
-     */
+
     public static void clearHistory() {
         String clearSQL = "DELETE FROM history";
 
@@ -284,11 +245,6 @@ public class DBConnector {
         }
     }
 
-    /**
-     * Huvudmetod för att testa funktionaliteten i denna klass.
-     *
-     * @param args Kommandoradsargument.
-     */
     public static void main(String[] args) {
         createHistoryTable();
         exportHistoryToJSON(getJsonFilePath("calculator/src/main/resources/history.json"));
