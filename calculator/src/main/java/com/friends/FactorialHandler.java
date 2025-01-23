@@ -5,7 +5,7 @@ import javafx.scene.control.TextField;
 public class FactorialHandler {
 
     /**
-     * Calculates the factorial of a given number and logs the result into the database and JSON file.
+     * Calculates the factorial of a given number and logs the result into the database, JSON, and XML files.
      *
      * @param display the TextField to display the result.
      */
@@ -37,6 +37,9 @@ public class FactorialHandler {
             // Export updated history to JSON file
             exportHistoryToJSON();
 
+            // Append the new entry to XML file
+            appendToXML(expression, resultString);
+
         } catch (NumberFormatException e) {
             display.setText("Invalid Input");
         }
@@ -49,5 +52,17 @@ public class FactorialHandler {
         String filePath = "history.json";
         DBConnector.exportHistoryToJSON(filePath);
         System.out.println("History exported to JSON: " + filePath);
+    }
+
+    /**
+     * Appends the new factorial entry to the XML file.
+     *
+     * @param expression the factorial expression (e.g., "5!")
+     * @param result the calculated factorial result (e.g., "120")
+     */
+    private static void appendToXML(String expression, String result) {
+        String xmlFilePath = "history.xml";
+        DBConnector.appendToXML(xmlFilePath, expression, result);
+        System.out.println("Entry appended to XML: " + xmlFilePath);
     }
 }

@@ -3,6 +3,9 @@ package com.friends;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -47,12 +50,15 @@ public class HistoryController {
 
     private void loadHistoryFromJSON() {
         String filePath = "history.json"; // Adjust path if necessary
+        System.out.println("Loading history from: " + filePath);
+
         try (FileReader reader = new FileReader(filePath)) {
             StringBuilder jsonContent = new StringBuilder();
             int c;
             while ((c = reader.read()) != -1) {
                 jsonContent.append((char) c);
             }
+            System.out.println("JSON Content: " + jsonContent);
 
             JSONArray jsonArray = new JSONArray(jsonContent.toString());
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -65,6 +71,7 @@ public class HistoryController {
                 ));
             }
         } catch (Exception e) {
+            System.err.println("Error loading JSON: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -116,6 +123,20 @@ public class HistoryController {
 
             showAlert("Success", "All entries have been deleted.");
         });
+    }
+
+    @FXML
+    public void handleXMLHistoryClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/xml_history.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Calculation History (XML)");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Helper method to show alert dialog
