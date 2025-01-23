@@ -17,16 +17,34 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.*;
 
+/**
+ * Hanterar databaskoppling och operationer relaterade till kalkylatorns historik.
+ */
 public class DBConnector {
 
+    /** URL för databaskopplingen. */
     private static final String URL = "jdbc:mariadb://localhost:3306/Calculator";
+
+    /** Användarnamn för databasen. */
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
+    /** Lösenord för databasen. */
+    private static final String PASSWORD = "p";
+
+    /**
+     * Skapar en anslutning till databasen.
+     *
+     * @return En {@link Connection}-instans till databasen.
+     * @throws SQLException Om anslutningen misslyckas.
+     */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    /**
+     * Skapar en tabell för att lagra beräkningshistorik om den inte redan finns.
+     */
     public static void createHistoryTable() {
         String createTableSQL = "CREATE TABLE IF NOT EXISTS history ("
                 + "id INT PRIMARY KEY AUTO_INCREMENT, "
@@ -69,6 +87,12 @@ public class DBConnector {
         }
     }
 
+    /**
+     * Infogar ny historikdata i databasen.
+     *
+     * @param expression Uttrycket som beräknades.
+     * @param result Resultatet av beräkningen.
+     */
     public static void insertHistory(String expression, String result) {
         String insertSQL = "INSERT INTO history (expression, result) VALUES (?, ?)";
 
@@ -83,6 +107,11 @@ public class DBConnector {
         }
     }
 
+    /**
+     * Exporterar hela historiken från databasen till en JSON-fil.
+     *
+     * @param filePath Filvägen där JSON-filen ska sparas.
+     */
     public static void exportHistoryToJSON(String filePath) {
         String query = "SELECT * FROM history";
 
@@ -102,7 +131,7 @@ public class DBConnector {
             }
 
             try (FileWriter file = new FileWriter(filePath)) {
-                file.write(jsonArray.toString(4)); // Pretty print with 4-space indentation
+                file.write(jsonArray.toString(4)); // Pretty print med 4 mellanslag för indrag
                 System.out.println("Data exported to " + filePath + " successfully!");
             } catch (IOException e) {
                 System.err.println("Error writing JSON to file: " + e.getMessage());
@@ -210,14 +239,56 @@ public class DBConnector {
         }
     }
 
+    /**
+     * Hämtar den fullständiga filvägen för historik JSON-filen.
+     *
+     * @param s Relativ filväg.
+     * @return Absolut filväg som en sträng.
+     */
     public static String getJsonFilePath(String s) {
-        return Paths.get("calculator/src/main/resources/history.json").toAbsolutePath().toString();
+        return Paths.get(s).toAbsolutePath().toString();
     }
 
     public static String getXmlFilePath(String s) {
         return Paths.get("calculator/src/main/resources/history.xml").toAbsolutePath().toString();
+    /**
+     * Raderar data från databasen baserat på dess ID.
+     *
+     * @param id ID för datan som ska raderas.
+     */
+    public static void deleteHistoryEntry(int id) {
+        String deleteSQL = "DELETE FROM history WHERE id = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(deleteSQL)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            System.out.println("Entry with ID " + id + " deleted from the database.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Rensar all historik från databasen.
+     */
+    public static void clearHistory() {
+        String clearSQL = "DELETE FROM history";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(clearSQL)) {
+            pstmt.executeUpdate();
+            System.out.println("All entries deleted from the database.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Huvudmetod för att testa funktionaliteten i denna klass.
+     *
+     * @param args Kommandoradsargument.
+     */
     public static void main(String[] args) {
         createHistoryTable();
         exportHistoryToJSON(getJsonFilePath("calculator/src/main/resources/history.json"));
