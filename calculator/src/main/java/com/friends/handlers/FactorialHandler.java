@@ -1,15 +1,11 @@
-package com.friends;
+package com.friends.handlers;
 
+import com.friends.DBConnector;
 import com.friends.operators.FactorialOperator;
 import javafx.scene.control.TextField;
 
 public class FactorialHandler {
 
-    /**
-     * Calculates the factorial of a given number and logs the result into the database, JSON, and XML files.
-     *
-     * @param display the TextField to display the result.
-     */
     public static void calculateFactorial(TextField display) {
         String currentText = display.getText();
         try {
@@ -33,21 +29,12 @@ public class FactorialHandler {
         }
     }
 
-    /**
-     * Exports the history from the database to a JSON file.
-     */
     private static void exportHistoryToJSON() {
         String filePath = "history.json";
         DBConnector.exportHistoryToJSON(filePath);
         System.out.println("History exported to JSON: " + filePath);
     }
 
-    /**
-     * Appends the new factorial entry to the XML file.
-     *
-     * @param expression the factorial expression (e.g., "5!")
-     * @param result the calculated factorial result (e.g., "120")
-     */
     private static void appendToXML(String expression, String result) {
         String xmlFilePath = "history.xml";
         DBConnector.appendToXML(xmlFilePath, expression, result);

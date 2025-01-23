@@ -1,5 +1,6 @@
-package com.friends;
+package com.friends.handlers;
 
+import com.friends.CalculatorController;
 import javafx.scene.control.TextField;
 
 public class ClearHandler {

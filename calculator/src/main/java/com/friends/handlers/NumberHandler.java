@@ -1,4 +1,4 @@
-package com.friends;
+package com.friends.handlers;
 
 import javafx.scene.control.TextField;
 

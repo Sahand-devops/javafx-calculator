@@ -1,5 +1,6 @@
-package com.friends;
+package com.friends.controllers;
 
+import com.friends.DBConnector;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
