@@ -17,6 +17,13 @@ public class CalculatorController {
     public final EditHandler editHandler = new EditHandler();
     public final FactorialHandler factorialHandler = new FactorialHandler();
 
+    private final MemoryControl memoryRecall = new MemoryControl.MemoryRecall();
+    private final MemoryControl memoryClear = new MemoryControl.MemoryClear();
+    private final MemoryControl memoryAdd = new MemoryControl.MemoryAdd();
+    private final MemoryControl memorySubtract = new MemoryControl.MemorySubtract();
+
+
+
 
     public Double base = null; // To store the base for exponentiation
     public boolean waitingForExponent = false; // Flag to indicate waiting for exponent
@@ -203,4 +210,43 @@ public class CalculatorController {
     public void handleFactorial(){
         factorialHandler.calculateFactorial(display);
     }
+
+
+
+    // Memory Recall (MR)
+    @FXML
+    public void handleMemoryRecall() {
+        display.setText(String.valueOf(memoryRecall.getMemory())); // Hämta minnet
+    }
+
+    // MC-knapp (Memory Clear)
+    @FXML
+    public void handleMemoryClear() {
+        memoryClear.handleMemoryOperation(0); // Nollställ minnet
+        display.setText("0");
+    }
+
+    // M+-knapp (Memory Add)
+    @FXML
+    public void handleMemoryAdd() {
+        try {
+            double currentValue = Double.parseDouble(display.getText());
+            memoryAdd.handleMemoryOperation(currentValue); // Lägg till i minnet
+        } catch (NumberFormatException e) {
+            display.setText("Error");
+        }
+    }
+
+    // M--knapp (Memory Subtract)
+    @FXML
+    public void handleMemorySubtract() {
+        try {
+            double currentValue = Double.parseDouble(display.getText());
+            memorySubtract.handleMemoryOperation(currentValue); // Dra ifrån minnet
+        } catch (NumberFormatException e) {
+            display.setText("Error");
+        }
+    }
 }
+
+
