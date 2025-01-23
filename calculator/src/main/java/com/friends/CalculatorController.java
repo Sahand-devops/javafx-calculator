@@ -288,38 +288,34 @@ public class CalculatorController {
         FactorialHandler.calculateFactorial(display);
     }
 
-
-
-    // Memory Recall (MR)
     @FXML
     public void handleMemoryRecall() {
-        display.setText(String.valueOf(memoryRecall.getMemory())); // Hämta minnet
+        double memoryValue = memoryRecall.getMemory();
+        display.setText(formatAsIntegerOrDouble(memoryValue));
     }
 
-    // MC-knapp (Memory Clear)
     @FXML
     public void handleMemoryClear() {
-        memoryClear.handleMemoryOperation(0); // Nollställ minnet
-        display.setText("0");
+        memoryClear.handleMemoryOperation(0);
+        display.setText(formatAsIntegerOrDouble(0));
     }
 
-    // M+-knapp (Memory Add)
     @FXML
     public void handleMemoryAdd() {
         try {
             double currentValue = Double.parseDouble(display.getText());
-            memoryAdd.handleMemoryOperation(currentValue); // Lägg till i minnet
+            memoryAdd.handleMemoryOperation(currentValue);
+            display.setText(formatAsIntegerOrDouble(currentValue));
         } catch (NumberFormatException e) {
             display.setText("Error");
         }
     }
-
-    // M--knapp (Memory Subtract)
     @FXML
     public void handleMemorySubtract() {
         try {
             double currentValue = Double.parseDouble(display.getText());
-            memorySubtract.handleMemoryOperation(currentValue); // Dra ifrån minnet
+            memorySubtract.handleMemoryOperation(currentValue);
+            display.setText(formatAsIntegerOrDouble(currentValue));
         } catch (NumberFormatException e) {
             display.setText("Error");
         }
