@@ -27,10 +27,6 @@ public class NumberHandler {
         this.newCalculation = newCalculation;
     }
 
-    public boolean isNewCalculation() {
-        return newCalculation;
-    }
-
     public void setAfterOperator(boolean afterOperator) {
         this.afterOperator = afterOperator;
     }

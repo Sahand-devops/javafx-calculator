@@ -89,9 +89,9 @@
                 <Button fx:id="history" onAction="#handleHistoryClick"  alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" text="History" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS" />
                 <Button fx:id="exit" onAction="#handleBackspaceClick" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" text="DELETE" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
 
-                <Button fx:id="" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                <Button fx:id="" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                <Button fx:id="" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                <Button fx:id="Button1" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                <Button fx:id="Button2" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                <Button fx:id="Button3" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" GridPane.columnIndex="4" GridPane.rowIndex="5" />
             </children>
         </GridPane>
     </children>

@@ -65,9 +65,9 @@ public abstract class MemoryControl {
             memory = 0;
         }
     }
-    /**
-     * Underklass för att hämta (recalla) minnet.
-     */
+            /**
+            * Underklass för att hämta (recalla) minnet.
+          */
     public static class MemoryRecall extends MemoryControl {
         /**
          * Ingen operation utförs här eftersom minnesvärdet redan

@@ -13,29 +13,21 @@ public class FactorialHandler {
     public static void calculateFactorial(TextField display) {
         String currentText = display.getText();
         try {
-            int number = Integer.parseInt(currentText); // Parse the input
+            int number = Integer.parseInt(currentText);
 
-            // Calculate factorial using the new FactorialOperator class
             long result = FactorialOperator.calculate(number);
 
-            // Update display with the result
             display.setText(Long.toString(result));
 
-            // Prepare the expression and result strings
             String expression = number + "!";
             String resultString = Long.toString(result);
 
-            // Save to database
             DBConnector.insertHistory(expression, resultString);
 
-            // Export updated history to JSON file
             exportHistoryToJSON();
 
-            // Append the new entry to XML file
             appendToXML(expression, resultString);
 
-        } catch (NumberFormatException e) {
-            display.setText("Invalid Input");
         } catch (IllegalArgumentException e) {
             display.setText("Invalid Input");
         }

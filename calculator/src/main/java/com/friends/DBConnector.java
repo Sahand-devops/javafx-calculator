@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 import java.sql.*;
 
 /**
- * Hanterar databaskoppling och operationer relaterade till kalkylatorns historik.
+ * Klass för hantering av databaskoppling och operationer relaterade till kalkylatorns historik.
  */
 public class DBConnector {
 
@@ -27,12 +27,14 @@ public class DBConnector {
 
     /** Användarnamn för databasen. */
     private static final String USER = "root";
+
+    /** Lösenord för databasen. */
     private static final String PASSWORD = "p";
 
     /**
      * Skapar en anslutning till databasen.
      *
-     * @return En {@link Connection}-instans till databasen.
+     * @return En {@link Connection} till databasen.
      * @throws SQLException Om anslutningen misslyckas.
      */
     public static Connection getConnection() throws SQLException {
@@ -40,9 +42,10 @@ public class DBConnector {
     }
 
     /**
-     * Skapar en tabell för att lagra beräkningshistorik om den inte redan finns.
+     * Skapar en tabell för att lagra kalkylatorns historik om den inte redan finns.
      */
     public static void createHistoryTable() {
+        // SQL-sats för att skapa tabellen
         String createTableSQL = "CREATE TABLE IF NOT EXISTS history ("
                 + "id INT PRIMARY KEY AUTO_INCREMENT, "
                 + "expression VARCHAR(255), "
@@ -55,15 +58,14 @@ public class DBConnector {
             stmt.executeUpdate(createTableSQL);
             System.out.println("Table 'history' created or already exists.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.print("Error connecting to database/creating table");
         }
     }
 
-
     /**
-     * Infogar ny historikdata i databasen.
+     * Infogar ett nytt historikobjekt i databasen.
      *
-     * @param expression Uttrycket som beräknades.
+     * @param expression Det matematiska uttrycket som beräknades.
      * @param result Resultatet av beräkningen.
      */
     public static void insertHistory(String expression, String result) {
@@ -76,7 +78,7 @@ public class DBConnector {
             pstmt.executeUpdate();
             System.out.println("New row added to the table.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.print("Error connecting to database or inserting into table");
         }
     }
 
@@ -104,7 +106,7 @@ public class DBConnector {
             }
 
             try (FileWriter file = new FileWriter(filePath)) {
-                file.write(jsonArray.toString(4)); // Pretty print med 4 mellanslag för indrag
+                file.write(jsonArray.toString(4));
                 System.out.println("Data exported to " + filePath + " successfully!");
             } catch (IOException e) {
                 System.err.println("Error writing JSON to file: " + e.getMessage());
@@ -115,6 +117,11 @@ public class DBConnector {
         }
     }
 
+    /**
+     * Exporterar hela historiken från databasen till en XML-fil.
+     *
+     * @param filePath Filvägen där XML-filen ska sparas.
+     */
     public static void exportHistoryToXML(String filePath) {
         String query = "SELECT * FROM history";
 
@@ -163,6 +170,13 @@ public class DBConnector {
         }
     }
 
+    /**
+     * Lägg till en ny historikpost i en existerande XML-fil.
+     *
+     * @param filePath Filvägen till XML-filen.
+     * @param expression Uttrycket som beräknades.
+     * @param result Resultatet av beräkningen.
+     */
     public static void appendToXML(String filePath, String expression, String result) {
         try {
             File xmlFile = new File(filePath);
@@ -212,13 +226,31 @@ public class DBConnector {
         }
     }
 
+    /**
+     * Hämtar den absoluta filvägen för en JSON-fil.
+     *
+     * @param s Den relativa filvägen.
+     * @return Den absoluta filvägen.
+     */
     public static String getJsonFilePath(String s) {
         return Paths.get(s).toAbsolutePath().toString();
     }
 
+    /**
+     * Hämtar den absoluta filvägen för en XML-fil.
+     *
+     * @param s Den relativa filvägen.
+     * @return Den absoluta filvägen.
+     */
     public static String getXmlFilePath(String s) {
-        return Paths.get(s).toAbsolutePath().toString();}
+        return Paths.get(s).toAbsolutePath().toString();
+    }
 
+    /**
+     * Raderar en specifik historikpost från databasen baserat på ID.
+     *
+     * @param id ID för posten som ska raderas.
+     */
     public static void deleteHistoryEntry(int id) {
         String deleteSQL = "DELETE FROM history WHERE id = ?";
 
@@ -228,11 +260,13 @@ public class DBConnector {
             pstmt.executeUpdate();
             System.out.println("Entry with ID " + id + " deleted from the database.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.print("An error occurred when deleting from table");
         }
     }
 
-
+    /**
+     * Raderar all historik från databasen.
+     */
     public static void clearHistory() {
         String clearSQL = "DELETE FROM history";
 
@@ -241,10 +275,15 @@ public class DBConnector {
             pstmt.executeUpdate();
             System.out.println("All entries deleted from the database.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.print("");
         }
     }
 
+    /**
+     * Programmet startpunkt som initierar skapandet av tabellen och exporterar historik.
+     *
+     * @param args Inga argument krävs för detta program.
+     */
     public static void main(String[] args) {
         createHistoryTable();
         exportHistoryToJSON(getJsonFilePath("calculator/src/main/resources/history.json"));
