@@ -19,6 +19,13 @@ public class CalculatorController {
     public boolean waitingForExponent = false; // Indikerar att användaren ska mata in exponent
     public final ExponentiationHandler exponentiationHandler = new ExponentiationHandler();
 
+    private final MemoryControl memoryRecall = new MemoryControl.MemoryRecall();
+    private final MemoryControl memoryClear = new MemoryControl.MemoryClear();
+    private final MemoryControl memoryAdd = new MemoryControl.MemoryAdd();
+    private final MemoryControl memorySubtract = new MemoryControl.MemorySubtract();
+
+
+
     private void calculate() {
         String displayText = display.getText();
         double secondNumber;
@@ -259,11 +266,11 @@ public class CalculatorController {
         }
     }
 
-
     @FXML
     public void handleExponentiation() {
         try {
             if (!waitingForExponent) {
+                // Store the base for exponentiation
                 firstNumber = Double.parseDouble(display.getText());
                 display.setText(display.getText() + " ^ ");
                 operator = "^";
@@ -279,5 +286,42 @@ public class CalculatorController {
     @FXML
     public void handleFactorial() {
         FactorialHandler.calculateFactorial(display);
+    }
+
+
+
+    // Memory Recall (MR)
+    @FXML
+    public void handleMemoryRecall() {
+        display.setText(String.valueOf(memoryRecall.getMemory())); // Hämta minnet
+    }
+
+    // MC-knapp (Memory Clear)
+    @FXML
+    public void handleMemoryClear() {
+        memoryClear.handleMemoryOperation(0); // Nollställ minnet
+        display.setText("0");
+    }
+
+    // M+-knapp (Memory Add)
+    @FXML
+    public void handleMemoryAdd() {
+        try {
+            double currentValue = Double.parseDouble(display.getText());
+            memoryAdd.handleMemoryOperation(currentValue); // Lägg till i minnet
+        } catch (NumberFormatException e) {
+            display.setText("Error");
+        }
+    }
+
+    // M--knapp (Memory Subtract)
+    @FXML
+    public void handleMemorySubtract() {
+        try {
+            double currentValue = Double.parseDouble(display.getText());
+            memorySubtract.handleMemoryOperation(currentValue); // Dra ifrån minnet
+        } catch (NumberFormatException e) {
+            display.setText("Error");
+        }
     }
 }
